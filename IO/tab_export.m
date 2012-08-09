@@ -1,7 +1,7 @@
 function tab_export(filename,data)
 %tab_export(filename,data)
     %exports data into a the tab delimited filename. 
-    %Michael Hutchins - 9/12/11
+    %Michael Hutchins - 9/12/11 
     
     columns=size(data,2);
     fid=fopen(filename,'wt');
