@@ -5,7 +5,7 @@ function [station_loc,station_name] = station_import(filename)
     s=fgets(fid);
     index=1;
     while fend==0
-       [A,~,~,next_index]=sscanf(s,'%g %g');
+       [A,a1,a2,next_index]=sscanf(s,'%g %g');
        %Prevents Nanjing from registering as NaN jing
        if length(A)>2 
            A=A(1:2);

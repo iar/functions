@@ -35,22 +35,4 @@ end
 %     end
 %     fprintf(fid,'\n');
 % end
-%        
-% fid=fopen('lookup_day.dat','wt');
-% for j=1:size(lookup_day,3);
-%     for i=1:size(lookup_day,1);
-%         fprintf(fid,'%g\t',lookup_day(i,:,j));
-%         fprintf(fid,'\n');
-%     end
-%     fprintf(fid,'\n');
-% end
-%         
-% fid=fopen('lookup_dist.dat','wt');
-% for j=1:size(lookup_dist,3);
-%     for i=1:size(lookup_dist,1);
-%         fprintf(fid,'%g\t',lookup_dist(i,:,j));
-%         fprintf(fid,'\n');
-%     end
-%     fprintf(fid,'\n');
-% end
-%         
+        

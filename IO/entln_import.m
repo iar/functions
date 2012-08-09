@@ -1,12 +1,30 @@
-function [data]=entln_import(date)
+function [data] = entln_import(date)
+%Imports an ENTLN .CSV lightning file
+%Output is YYYY, MM, DD, hh, mm, ss, lat, long, height (m), stroke type,
+%amplitude (A), stroke_solution
+
+Import=false;
+en_path='/wd2/ENfiles/';
 
 if strmatch(class(date),'double')
     if length(date)==3
-        fid=fopen(sprintf('/Volumes/Data/ENTLN/ENTLN%04g%02g%02g.loc',date(1:3)));
+        filenameMat=sprintf('%sEN%04g%02g%02g.mat',en_path,date(1:3));
+        if exist(filenameMat,'file')==2,
+            load(filenameMat);
+            Import=false;
+        else
+            fid=fopen(sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path,date(1:3)));
+        end
     elseif length(date)==1;
         date=datevec(date);
         date=date(1:3);
-        fid=fopen(sprintf('/Volumes/Data/ENTLN/ENTLN%04g%02g%02g.loc',date(1:3)));
+        filenameMat=sprintf('%sEN%04g%02g%02g.mat',en_path,date(1:3));
+        if exist(filenameMat,'file')==2,
+            load(filenameMat)
+            Import=false;
+        else
+            fid=fopen(sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path,date(1:3)));
+        end
     else
         warning('Unknown Input Format');
     end
@@ -16,15 +34,62 @@ else
     error('Unrecognized filename.')
 end
 
-%2011-06-01T00:00:00.852282911,43.88088610,-83.70958050,1,-8030.00000000
-[A] = sscanf(fgets(fid),'%s');
-[B] = sscanf(fgets(fid),'%g-%g-%gT%g:%g:%f,%f,%f,%g,%f');
-data=fscanf(fid,['%g-%g-%g' 'T' '%g:%g:%f,%f,%f,%g,%f'],[10,Inf]);
+%%
 
-data=data';
+if Import
+    
+    s=fgets(fid);
+    fend=feof(fid);
+    index=1;
+    data=zeros(20000000,13);
 
-data=[B';data];
+    while(fend==0),
+        s=fgets(fid);
+%         A = sscanf(s(89:end),'%g-%g-%g %g:%g:%f,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
+        A = sscanf(s(85:end),'%g/%g/%g %g:%g:%f %2c,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
+        if isempty(A) || length(A)~=11
+            a=strfind(s,',');
+            A = sscanf(s(a(3)+1:end),'%g/%g/%g %g:%g:%f %2c,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
+        end
 
-fclose all;
+        B = textscan(s,'%s%s','Delimiter',',,');
+        B1 = B{1};
+        B2 = B{2};
+        B1 = B1{end-1};
+        B2 = B2{end-1};
+        if length(B1) < length(B2) && length(B1)>=1
+            B = B1;
+            Balt = B2;
+        else
+            B = B2;
+            Balt = B1;
+        end
+        B = sscanf(B,'%g');
+        if isempty(B)
+            B = sscanf(Balt,'%g');
+        end
+        
+        
+        D=strfind(s,',,');
+        E=strfind(s,'=');
+        
+        if length(D)>1
+            nstn=length(E);
+        else
+            nstn=length(E)-2;
+        end
+        
+        data(index,:)=[A(9:19)',B,nstn];
+        index=index+1;
+        fend=feof(fid);
+    end
+
+    data=data(1:index-1,:);
+
+    fclose all;
+
+end
+
+%%
 
 end
