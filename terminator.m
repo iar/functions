@@ -19,10 +19,16 @@ function [path_day,path_night]=terminator(lat,long,time,stat_lat,stat_long)
 %% Check Inputs
 
     if lat<-90 || lat>90
-        error('Latitude out of range')
+        warning('Latitude out of range: fixed at boundary')
+        if lat<-90
+             lat = -89.9;
+        elseif lat>90
+             lat = 89.9;
+        end
     end
     if long<-180 || long>180
-        error('Longitude out of range')
+        warning('Longitude out of range: wrapped')
+        long = wrapTo180(long);
     end
 
 
