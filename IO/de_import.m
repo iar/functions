@@ -2,6 +2,7 @@ function [de_map,de_map_high,de_time] = de_import(date)
 %Imports an altered A file that includes power information for each station
 
 
+dataPath = textread('dataPath.dat','%s\n');
 path = '';
 pathAlt = '';
 for i = 1 : size(dataPath,1);

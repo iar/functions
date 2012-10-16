@@ -5,6 +5,7 @@ function [data] = entln_import(date)
 
 import=true;
 
+dataPath = textread('dataPath.dat','%s\n');
 path = '';
 pathAlt = '';
 for i = 1 : size(dataPath,1);

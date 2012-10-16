@@ -3,8 +3,16 @@ function [data] = ae_import(date)
 
 
 dataPath = textread('dataPath.dat','%s\n');
-path = dataPath{1};
-pathAlt = dataPath{2};
+path = '';
+pathAlt = '';
+for i = 1 : size(dataPath,1);
+    if index == 1 && exist(dataPath{i},'dir')
+        path = dataPath{i};
+        index = index + 1;
+    elseif index ==2 && exist(dataPath{i},'dir')
+        pathAlt = dataPath{i};
+    end
+end
 
 ae_path = sprintf('%sAEfiles/',path);
 ae_path_alt = sprintf('%sAEfiles/',pathAlt);
