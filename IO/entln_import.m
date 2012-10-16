@@ -33,7 +33,7 @@ if strmatch(class(date),'double')
     fileload=sprintf('%sEN%04g%02g%02g.mat',en_path,date(1:3));
     fileimport=sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path,date(1:3));
 
-    fileloadAlt=sprintf('%sEN%04g%02g%02g.mat',ap_path_alt,date(1:3));
+    fileloadAlt=sprintf('%sEN%04g%02g%02g.mat',en_path_alt,date(1:3));
     fileimportAlt=sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path_alt,date(1:3));
     
     if exist(fileload,'file');
