@@ -3,40 +3,56 @@ function [data] = entln_import(date)
 %Output is YYYY, MM, DD, hh, mm, ss, lat, long, height (m), stroke type,
 %amplitude (A), stroke_solution
 
-Import=false;
-en_path='/wd2/ENfiles/';
+import=true;
+
+dataPath = textread('dataPath.dat','%s\n');
+path = dataPath{1};
+pathAlt = dataPath{2};
+
+en_path = sprintf('%sENfiles/',path);
+en_path_alt = sprintf('%sENfiles/',pathAlt);
 
 if strmatch(class(date),'double')
-    if length(date)==3
-        filenameMat=sprintf('%sEN%04g%02g%02g.mat',en_path,date(1:3));
-        if exist(filenameMat,'file')==2,
-            load(filenameMat);
-            Import=false;
-        else
-            fid=fopen(sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path,date(1:3)));
-        end
-    elseif length(date)==1;
+    if length(date)==1;
         date=datevec(date);
         date=date(1:3);
-        filenameMat=sprintf('%sEN%04g%02g%02g.mat',en_path,date(1:3));
-        if exist(filenameMat,'file')==2,
-            load(filenameMat)
-            Import=false;
-        else
-            fid=fopen(sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path,date(1:3)));
-        end
-    else
+    elseif length(date)~=3
         warning('Unknown Input Format');
     end
+    
+    fileload=sprintf('%sEN%04g%02g%02g.mat',en_path,date(1:3));
+    fileimport=sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path,date(1:3));
+
+    fileloadAlt=sprintf('%sEN%04g%02g%02g.mat',ap_path_alt,date(1:3));
+    fileimportAlt=sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path_alt,date(1:3));
+    
+    if exist(fileload,'file');
+       load(fileload)
+       import=false;
+    elseif exist(fileloadAlt,'file')
+        load(fileloadAlt);
+        import=false;
+    elseif exist(fileimport,'file');
+       fid=fopen(fileimport);
+       import=true;
+    elseif exist(fileimportAlt,'file');
+        fid=fopen(fileloadAlt);
+        import=true;
+    else
+        error('File Not Found!')
+    end
+    
+    
 elseif strmatch(class(date),'char')
     fid=fopen(date);
+    import=true;
 else
     error('Unrecognized filename.')
 end
 
 %%
 
-if Import
+if import
     
     s=fgets(fid);
     fend=feof(fid);

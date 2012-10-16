@@ -1,6 +1,15 @@
 function [RData] = r_import(date)
 %Imports an altered A file that includes power information for each station
 
+
+dataPath = textread('dataPath.dat','%s\n');
+path = dataPath{1};
+pathAlt = dataPath{2};
+
+r_path = sprintf('%sRfiles/',path);
+r_path_alt = sprintf('%sRfiles/',pathAlt);
+
+
 if strmatch(class(date),'double')
 
     if length(date)==3
@@ -11,7 +20,6 @@ if strmatch(class(date),'double')
         Range='minute';
     end
 
-    r_path='/Volumes/Time Machine/Data/R_files/';
     RData=[0 0 0];
 
     if strcmp(Range,'day');
