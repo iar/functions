@@ -3,6 +3,7 @@ function [data,power] = ap_import(date)
 
 import=true;
 
+index=1;
 dataPath = textread('dataPath.dat','%s\n');
 path = '';
 pathAlt = '';

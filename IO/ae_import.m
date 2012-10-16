@@ -1,7 +1,7 @@
 function [data] = ae_import(date)
 %Imports an altered A file that includes energy information for each station
 
-
+index=1;
 dataPath = textread('dataPath.dat','%s\n');
 path = '';
 pathAlt = '';
