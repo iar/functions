@@ -1,7 +1,8 @@
-tfile=tab_import('TfileThru20111013.txt');
+tfile=tab_import('T20120215.dat');
 index=size(tfile,1)+1;
 stations
-for i=tfile(end,1):datenum([2012,02,29]);
+tic
+for i=tfile(end,1):datenum(floor(now)-1);
     [data,power]=ap_import(i);
     power=power';
     power(power==0)=NaN;
@@ -14,7 +15,18 @@ for i=tfile(end,1):datenum([2012,02,29]);
     end
     tfile(index,1)=i;
     index=index+1;
+    fprintf('%s Done - %g seconds elapsed\n',datestr(i),toc);
 end
 date=datevec(tfile(end,1));
 tfileName=sprintf('T%04g%02g%02g.dat',date(1:3));
 tab_export(tfileName,tfile);
+
+%% Print names/dates
+
+if true
+    on = tfile(:,2:end) > 5000;
+    for i = 1 : size(station_loc,1)
+        onDays = find(on(:,i));
+        fprintf('%s - %s\n',station_name{i},datestr(tfile(onDays(1),1)));
+    end
+end
