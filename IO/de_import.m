@@ -2,9 +2,17 @@ function [de_map,de_map_high,de_time] = de_import(date)
 %Imports an altered A file that includes power information for each station
 
 
-dataPath = textread('dataPath.dat','%s\n');
-path = dataPath{1};
-pathAlt = dataPath{2};
+path = '';
+pathAlt = '';
+for i = 1 : size(dataPath,1);
+    if index == 1 && exist(dataPath{i},'dir')
+        path = dataPath{i};
+        index = index + 1;
+    elseif index ==2 && exist(dataPath{i},'dir')
+        pathAlt = dataPath{i};
+    end
+end
+
 
 de_path = sprintf('%sdeMaps/',path);
 de_path_alt = sprintf('%sdeMaps/',pathAlt);

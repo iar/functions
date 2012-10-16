@@ -3,8 +3,18 @@ function [data] = a_import(date)
 %%date vector [yyyy,mm,dd], a datenum, or as a filename
 
 dataPath = textread('dataPath.dat','%s\n');
-path = dataPath{1};
-pathAlt = dataPath{2};
+index = 1;
+
+path = '';
+pathAlt = '';
+for i = 1 : size(dataPath,1);
+    if index == 1 && exist(dataPath{i},'dir')
+        path = dataPath{i};
+        index = index + 1;
+    elseif index ==2 && exist(dataPath{i},'dir')
+        pathAlt = dataPath{i};
+    end
+end
 
 a_path = sprintf('%sAfiles/',path);
 a_path_alt = sprintf('%sAfiles/',pathAlt);
@@ -27,24 +37,26 @@ if strmatch(class(date),'double')
     fileGzipAlt=sprintf('%sA%04g%02g%02g.loc.gz',a_path_alt,date(1:3));
     
     if exist(fileImport,'file');
-       gFile = sprintf('%s.gz',fileImport);
+       gFile = fileImport;
        fid = fopen(fileImport);
        gz = true;
         
     elseif exist(fileImportAlt,'file')
-       gFile = sprintf('%s.gz',fileImportAlt);
+       gFile = fileImportAlt;
        fid = fopen(fileImportAlt);
        gz = true;
        
     elseif exist(fileGzip,'file');
        gFile = fileGzip;
-       system(sprintf('gunzip %s',gfile));
+       system(sprintf('gunzip %s',gFile));
+       gFile = gFile(1:end-3);
        fid=fopen(fileGzip(1:end-3));
        gz = true;
        
     elseif exist(fileGzipAlt,'file');
        gFile = fileGzipAlt;
-       system(sprintf('gunzip %s',gfile));
+       system(sprintf('gunzip %s',gFile));
+       gFile = gFile(1:end-3);
        fid=fopen(fileGzipAlt(1:end-3));
        gz = true;
     else

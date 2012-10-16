@@ -3,9 +3,17 @@ function [data,power] = ap_import(date)
 
 import=true;
 
-dataPath = textread('dataPath.dat','%s\n');
-path = dataPath{1};
-pathAlt = dataPath{2};
+path = '';
+pathAlt = '';
+for i = 1 : size(dataPath,1);
+    if index == 1 && exist(dataPath{i},'dir')
+        path = dataPath{i};
+        index = index + 1;
+    elseif index ==2 && exist(dataPath{i},'dir')
+        pathAlt = dataPath{i};
+    end
+end
+
 
 ap_path = sprintf('%sAPfiles/',path);
 ap_path_alt = sprintf('%sAPfiles/',pathAlt);

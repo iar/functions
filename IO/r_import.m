@@ -3,8 +3,17 @@ function [RData] = r_import(date)
 
 
 dataPath = textread('dataPath.dat','%s\n');
-path = dataPath{1};
-pathAlt = dataPath{2};
+index = 1;
+for i = 1 : size(dataPath,1);
+    if index == 1 && exist(dataPath{i},'dir')
+        path = dataPath{i};
+        index = index + 1;
+    elseif index == 2 && exist(dataPath{i},'dir')
+        pathAlt = dataPath{i};
+    end
+end
+% path = dataPath{1};
+% pathAlt = dataPath{2};
 
 r_path = sprintf('%sRfiles/',path);
 r_path_alt = sprintf('%sRfiles/',pathAlt);
