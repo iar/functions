@@ -27,6 +27,8 @@ if true
     on = tfile(:,2:end) > 5000;
     for i = 1 : size(station_loc,1)
         onDays = find(on(:,i));
-        fprintf('%s - %s\n',station_name{i},datestr(tfile(onDays(1),1)));
+        if ~isempty(onDays)
+            fprintf('%s - %s\n',station_name{i},datestr(tfile(onDays(1),1)));
+        end
     end
 end

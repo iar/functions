@@ -1,38 +1,55 @@
 function [data,power] = ap_import(date)
 %Imports an altered A file that includes power information for each station
 
-Import=true;
-ap_path='/Volumes/Data/WWLLN/AP_files/';
+import=true;
+
+dataPath = textread('dataPath.dat','%s\n');
+path = dataPath{1};
+pathAlt = dataPath{2};
+
+ap_path = sprintf('%sAPfiles/',path);
+ap_path_alt = sprintf('%sAPfiles/',pathAlt);
+
 
 if strmatch(class(date),'double')
-    if length(date)==3
-        filenameMat=sprintf('%sAP%04g%02g%02g.mat',ap_path,date(1:3));
-        if exist(filenameMat,'file')==2,
-            load(filenameMat);
-            Import=false;
-        else
-            fid=fopen(sprintf('%sAP%04g%02g%02g.loc',ap_path,date(1:3)));
-        end
-    elseif length(date)==1;
+    if length(date)==1;
         date=datevec(date);
         date=date(1:3);
-        filenameMat=sprintf('%sAP%04g%02g%02g.mat',ap_path,date(1:3));
-        if exist(filenameMat,'file')==2,
-            load(filenameMat)
-            Import=false;
-        else
-            fid=fopen(sprintf('%sAP%04g%02g%02g.loc',ap_path,date(1:3)));
-        end
-    else
+    elseif length(date)~=3
         warning('Unknown Input Format');
     end
+    
+    fileload=sprintf('%sAP%04g%02g%02g.mat',ap_path,date(1:3));
+    fileimport=sprintf('%sAP%04g%02g%02g.loc',ap_path,date(1:3));
+ 
+    fileloadAlt=sprintf('%sAP%04g%02g%02g.mat',ap_path_alt,date(1:3));
+    fileimportAlt=sprintf('%sAP%04g%02g%02g.loc',ap_path_alt,date(1:3));
+    
+    if exist(fileload,'file');
+       load(fileload)
+       import=false;
+    elseif exist(fileloadAlt,'file')
+        load(fileloadAlt);
+        import=false;
+    elseif exist(fileimport,'file');
+       fid=fopen(fileimport);
+       import=true;
+    elseif exist(fileimportAlt,'file');
+        fid=fopen(fileloadAlt);
+        import=true;
+    else
+        error('File Not Found!')
+    end
+    
+    
 elseif strmatch(class(date),'char')
     fid=fopen(date);
+    import=true;
 else
     error('Unrecognized filename.')
 end
 
-if Import
+if import
 
 s=fgets(fid);
 fend=feof(fid);

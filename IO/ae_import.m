@@ -1,9 +1,15 @@
 function [data] = ae_import(date)
 %Imports an altered A file that includes energy information for each station
 
-ae_path='/Volumes/Data/WWLLN/AE_files/';
-app_path='/Volumes/Data/WWLLN/APP_files/';
-app=false;
+
+dataPath = textread('dataPath.dat','%s\n');
+path = dataPath{1};
+pathAlt = dataPath{2};
+
+ae_path = sprintf('%sAEfiles/',path);
+ae_path_alt = sprintf('%sAEfiles/',pathAlt);
+
+import = true;
 
 if strmatch(class(date),'double')
     if length(date)==1;
@@ -14,24 +20,25 @@ if strmatch(class(date),'double')
     end
     
     fileload=sprintf('%sAE%04g%02g%02g.mat',ae_path,date(1:3));
-    fileloadAlt=sprintf('%sAPP%04g%02g%02g.mat',app_path,date(1:3));
     fileimport=sprintf('%sAE%04g%02g%02g.loc',ae_path,date(1:3));
-    fileimportAlt=sprintf('%sAPP%04g%02g%02g.loc',app_path,date(1:3)); 
+ 
+    fileloadAlt=sprintf('%sAE%04g%02g%02g.mat',ae_path_alt,date(1:3));
+    fileimportAlt=sprintf('%sAE%04g%02g%02g.loc',ae_path_alt,date(1:3));
     
     if exist(fileload,'file');
        load(fileload)
        import=false;
+    elseif exist(fileloadAlt,'file')
+        load(fileloadAlt);
+        import=false;
     elseif exist(fileimport,'file');
        fid=fopen(fileimport);
        import=true;
-    elseif exist(fileloadAlt,'file')
-        load(fileloadAlt);
-        app=true;
-        import=false;
-    else exist(fileimportAlt,'file');
+    elseif exist(fileimportAlt,'file');
         fid=fopen(fileloadAlt);
-        app=true;
         import=true;
+    else
+        error('File Not Found!')
     end
     
     
@@ -52,8 +59,5 @@ if import
 
 end
 
-if app
-    data(:,11:12)=data(:,11:12).*1.33;
-end
 
 end
