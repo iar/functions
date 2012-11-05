@@ -7,7 +7,7 @@ function [lookup,div]=lookup_import(filename)
     index_stat=1;
     while fend==0
        A=sscanf(s,'%g\t');
-       if isempty(A); 
+       if isempty(A) | isnan(A); 
            index_stat=index_stat+1;
            index=1;
        else
