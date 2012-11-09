@@ -77,22 +77,23 @@ function [ flash ] = flash_group( data )
                         multiplicity = size(flashStrokes,1);
                         maxEnergy = max(flashStrokes(:,11));
                         medEnergy = median(flashStrokes(flashStrokes(:,11)>0,11));
-                        duration = range(flashStrokes(:,end));
+                        duration = max(flashStrokes(:,end)) - min(flashStrokes(:,end));
 
                         flashData(flashIndex,7:13)=[centroid,area,duration,...
                                maxEnergy,medEnergy,multiplicity];
 
-                        flashIndex = flashIndex + 1;
 
                         timeData(flashLoc,end) = -1;
                     end
 
                 end
+               flashIndex = flashIndex + 1;
+ 
             end
         end    
     end
 
-    flashData = flashData(1:flashIndex-1,:);
+    flash = flashData(1:flashIndex-1,:);
     
 end
 
