@@ -3,6 +3,11 @@ function [ interstroke ] = interstroke_time( data , resTime, resDist )
     % The input resTime should be given in seconds and resDist in km
     % The defaults are 1 second and 25 km
     
+    % In general: <1ms are the same process for a single stroke
+    %             1ms - 1s are the same flash
+    %             1s to 600s are the same storm (upper bound not strict)
+    
+    
     resTimeDefault = 1;
     resDistDefault = 25;
     
