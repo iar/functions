@@ -1,5 +1,7 @@
 function [flashes] = lis_import(date)
-%Imports an altered A file that includes power information for each station
+%Imports a LIS data file:
+%   YYYY,MM,DD,hh,mm,ss,lat,long,evnts,confidence,irradiance,area,duration
+
 
 
 index=1;
