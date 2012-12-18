@@ -6,11 +6,15 @@ function [pathDay,pathNight]=terminator_new(lat1,long1,time,lat2,long2)
 
 % http://en.wikipedia.org/wiki/Position_of_the_Sun
 
-
-
 %% Check Inputs
 
+    lat1 = lat1(:);
+    long1 = long1(:);
+    lat2 = lat2(:);
+    long2 = long2(:);
+
     if length(lat1) > 1 && length(lat2) == 1
+        warning('Vector lengths switched')
         lat1Temp = lat1;
         long1Temp = long1;
         lat1 = lat2;
@@ -49,17 +53,10 @@ function [pathDay,pathNight]=terminator_new(lat1,long1,time,lat2,long2)
 
 %% Get great circle path coordinates
 
-pathLat = zeros(length(lat2),100);
-pathLong = pathLat;
+[pathLat,pathLong] = track2(lat1,long1,lat2,long2);
 
-for i = 1 : length(lat2);
-
-    [plat,plong]=track2(lat1,long1,lat2(i),long2(i));
-
-    pathLat(i,:) = plat';
-    pathLong(i,:) = plong';
-
-end
+pathLat = pathLat';
+pathLong = pathLong';
 
 %% Get solar altitude
 
