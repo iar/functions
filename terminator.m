@@ -55,8 +55,8 @@ function [pathDay,pathNight]=terminator(lat1,long1,time,lat2,long2)
 
 [pathLat,pathLong] = track2(lat1,long1,lat2,long2);
 
-pathLat = pathLat';
-pathLong = pathLong';
+pathLat = real(pathLat)';
+pathLong = real(pathLong)';
 
 %% Get solar altitude
 
