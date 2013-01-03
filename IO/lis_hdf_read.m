@@ -17,7 +17,7 @@ confidence = double(flash{14}');
 
 TAI_UTC = 34;
 
-time = (time + TAI_UTC) ./ 86400;
+time = (time - TAI_UTC) ./ 86400;
 
 date=datevec(time + datenum([1993,1,1]));
 
