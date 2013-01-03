@@ -63,7 +63,7 @@ if import
 
     data=data';
 
-    fclose all;
+    fclose(fid);
 
 end
 

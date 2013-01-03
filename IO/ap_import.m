@@ -89,7 +89,7 @@ end
 data=data(1:index-1,:);
 power=power(:,1:index-1);
 
-fclose all;
+fclose(fid);
 
 clear time start_index i j filename date days start_date s index fend
 clear A B count errmsg fid nextindex

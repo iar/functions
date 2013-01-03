@@ -18,13 +18,13 @@ function [data] = tab_import(filename,columns)
         
         columns=count;
         
-        fclose all;
+        fclose(fid);
     end
     
     fid=fopen(filename);
     data=fscanf(fid,repmat('%g ',1,columns),[columns,Inf]);
     data=data';
-    fclose all;
+    fclose(fid);
 
 end
 

@@ -8,6 +8,6 @@ function tab_export(filename,data)
     for i=1:size(data,1);
         fprintf(fid,sprintf('%s\n',repmat('%f\t',1,columns)),data(i,:));
     end
-    fclose all;
+    fclose(fid);
 end
 

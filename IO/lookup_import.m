@@ -24,7 +24,7 @@ function [lookup,div,station]=lookup_import(filename)
        fend=feof(fid);
        s=fgets(fid);
     end
-    fclose all;
+    fclose(fid);
     div=360/size(lookup,1);
 end
 
