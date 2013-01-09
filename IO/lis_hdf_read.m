@@ -14,8 +14,9 @@ events = double(flash{11}');
 confidence = double(flash{14}');
 
 % UTC is behind TAI by 34 seconds in 2011, 35 seconds after 2012/6/30
+% UTC is behind TAI93 by 7 seconds in 2011, 8 seconds after 2012/6/30
 
-TAI_UTC = 34;
+TAI_UTC = 7;
 
 time = (time - TAI_UTC) ./ 86400;
 
