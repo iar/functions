@@ -51,6 +51,25 @@ function [pathDay,pathNight]=terminator(lat1,long1,time,lat2,long2)
         long2 = wrapTo180(long2);
     end
 
+    if size(time,2) == 1
+        time = datevec(time);
+    end
+    
+    if size(time,1) > length(lat2)
+        if length(lat2) == 1
+            lat2 = repmat(lat2,size(time,1),1);
+            long2 = repmat(long2,size(time,1),1);
+        else
+            error('Date and lat2/long2 do not match')
+        end
+    elseif size(time,1) < length(lat2)
+        if size(time,1) == 1
+            time = repmat(time,length(lat2),1);
+        else
+            error('Date and lat2/long2 do not match')
+        end
+    end
+    
 %% Get great circle path coordinates
 
 [pathLat,pathLong] = track2(lat1,long1,lat2,long2);
@@ -93,14 +112,14 @@ delta = asind(sind(epsilon).*sind(lambda));
 
 % Hour angle
 
-localTime = time(4) + time(5)./60 + time(6)./3600;
-localTime = localTime + pathLong./15;
+localTime = time(:,4) + time(:,5)./60 + time(:,6)./3600;
+localTime = bsxfun(@plus,localTime,pathLong./15);
 
 h = localTime.*15 - 12*15;
 
 % Solar altitude angle
 
-altitude = asind(cosd(h).*cosd(delta).*cosd(pathLat) + sind(delta).*sind(pathLat));
+altitude = asind(bsxfun(@times,cosd(h),cosd(delta)).*cosd(pathLat) + bsxfun(@times,sind(delta),sind(pathLat)));
 
 %% Percent path in daylight/night
 
