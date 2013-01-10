@@ -12,64 +12,97 @@ function [pathDay,pathNight]=terminator(lat1,long1,time,lat2,long2)
     long1 = long1(:);
     lat2 = lat2(:);
     long2 = long2(:);
-
-    if length(lat1) > 1 && length(lat2) == 1
-        warning('Vector lengths switched')
-        lat1Temp = lat1;
-        long1Temp = long1;
-        lat1 = lat2;
-        long1 = long2;
-        lat2 = lat1Temp;
-        long2 = long1Temp;
-    end
-
-    if lat1<-90 || lat1>90
-        warning('Latitude 1 out of range: fixed at boundary')
-        if lat1<-90
-             lat1 = -89.9;
-        elseif lat1>90
-             lat1 = 89.9;
-        end
+    
+    
+    % Check long/lat pairs are of the same length
+    
+    if length(lat1) ~= length(long1)
+        error('Lat1 and Long1 do not match')
     end
     
-    if long1<-180 || long1>180
-        warning('Longitude 1 out of range: wrapped')
-        long1 = wrapTo180(long1);
+    if length(lat2) ~= length(long2)
+        error('Lat2 and Long2 do not match')
     end
     
-    if sum(lat2<-90)>0 || sum(lat2>90)>0
-        warning('Latitude 2 out of range: fixed at boundary')
-        if sum(lat2<-90)>0
-             lat2(lat2<-90) = -89.9;
-        elseif sum(lat2>90)>0
-             lat2(lat2>90) = 89.9;
-        end
+    % Format datenums to datevecs
+        
+    if time(1) > 3000
+        time = time(:);
     end
     
-    if sum(long2<-180)>0 || sum(long2>180)>0
-        warning('Longitude 2 out of range: wrapped')
-        long2 = wrapTo180(long2);
-    end
-
     if size(time,2) == 1
         time = datevec(time);
     end
     
-    if size(time,1) > length(lat2)
-        if length(lat2) == 1
-            lat2 = repmat(lat2,size(time,1),1);
-            long2 = repmat(long2,size(time,1),1);
+    % Cut out latitude near poles
+    
+    if sum(lat1(:) < -90) > 0
+        lat1(lat1 < -90) = -89.9;
+        warning('Latitude 1 out of range: fixed at boundary')
+    end
+    
+    if sum(lat1(:) > 90) > 0
+        lat1(lat1 > 90) = 89.9;
+        warning('Latitude 1 out of range: fixed at boundary')
+    end
+
+    if sum(lat2(:) < -90) > 0
+        lat2(lat2 < -90) = -89.9;
+        warning('Latitude 2 out of range: fixed at boundary')
+    end
+    
+    if sum(lat2(:) > 90) > 0
+        lat2(lat2 > 90) = 89.9;
+        warning('Latitude 2 out of range: fixed at boundary')
+    end
+
+    % Wrap longitude to 180
+
+    if sum(long1(:) < -180) > 0 || sum(long1(:) > 180) > 0
+        long1 = wrapTo180(long1);
+        warning('Longitude 1 out of range: wrapped')
+    end
+
+    if sum(long2(:) < -180) > 0 || sum(long2(:) > 180) > 0
+        long2 = wrapTo180(long2);
+        warning('Longitude 2 out of range: wrapped')
+    end
+    
+    % Reformat so lat1/long1 and lat2/long2 are the same length
+    
+    size1 = length(lat1);
+    size2 = length(lat2);
+    
+    if size1 ~= size2
+        if size1 > size2 && size2 == 1
+            lat2 = repmat(lat2,size1,1);
+            long2 = repmat(long2,size1,1); 
+        elseif size2 > size1 && size1 == 1
+            lat1 = repmat(lat1,size2,1);
+            long1 = repmat(long1,size2,1); 
         else
-            error('Date and lat2/long2 do not match')
-        end
-    elseif size(time,1) < length(lat2)
-        if size(time,1) == 1
-            time = repmat(time,length(lat2),1);
-        else
-            error('Date and lat2/long2 do not match')
+            error('Lat/long inputs do not match')
         end
     end
     
+    % Reformat so time and lat/long are the same length
+    
+    size1 = length(lat1);        
+    sizeD = size(time,1);
+    
+    if size1 ~= sizeD
+        if size1 > sizeD && sizeD == 1
+            time = repmat(time,size1,1);
+        elseif sizeD > size1 && size1 == 1
+            lat1 = repmat(lat1,sizeD,1);
+            long1 = repmat(long1,sizeD,1); 
+            lat2 = repmat(lat2,sizeD,1);
+            long2 = repmat(long2,sizeD,1);
+        else
+            error('Lat/long and time inputs do not match')
+        end
+    end
+        
 %% Get great circle path coordinates
 
 [pathLat,pathLong] = track2(lat1,long1,lat2,long2);
