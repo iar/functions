@@ -32,16 +32,31 @@ if strmatch(class(date),'double')
     RData=[0 0 0];
 
     if strcmp(Range,'day');
-        for i=0:10:1440
-            Date=datevec(datenum([date(1:3),0,i,0]));
-            fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:5)));
-            rdata=fscanf(fid,'%g %f %g',[3,Inf]);
-            rdata=rdata';
-            fclose all;
-            if size(RData,1)==1
-                RData=rdata;
-            else
-                RData=[RData;rdata];
+        if datenum(date) <= datenum([2005,7,26])
+            for i = 0 : 23
+                Date=[date(1:3),i];
+                fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:4)));
+                rdata=fscanf(fid,'%g %f %g',[3,Inf]);
+                rdata=rdata';
+                fclose all;
+                if size(RData,1)==1
+                    RData=rdata;
+                else
+                    RData=[RData;rdata];
+                end
+            end            
+        else
+            for i=0:10:1440
+                Date=datevec(datenum([date(1:3),0,i,0]));
+                fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:5)));
+                rdata=fscanf(fid,'%g %f %g',[3,Inf]);
+                rdata=rdata';
+                fclose all;
+                if size(RData,1)==1
+                    RData=rdata;
+                else
+                    RData=[RData;rdata];
+                end
             end
         end
     elseif strcmp(Range,'hour');
