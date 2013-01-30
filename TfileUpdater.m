@@ -1,34 +1,26 @@
-tfile=tab_import('T20120215.dat');
-index=size(tfile,1)+1;
+% TfileUpdate updates T files to the latest data, or regenerates it from
+% the R-files
+
 stations
-tic
-for i=tfile(end,1):datenum(floor(now)-1);
-    [data,power]=ap_import(i);
-    power=power';
-    power(power==0)=NaN;
-    power(isnan(power(:,1)),1)=0;
-    power=power(:,1:2:end);
-    power=power(:);
-    power(isnan(power))=[];
-    for j=1:size(station_loc,1)
-        tfile(index,j+1)=sum(power==j-1);
-    end
-    tfile(index,1)=i;
-    index=index+1;
-    fprintf('%s Done - %g seconds elapsed\n',datestr(i),toc);
+tic;
+dateRange = datenum([2005,01,01]):datenum([2013,01,30]);
+tfile = zeros(length(dateRange),size(station_loc,1)+1);
+
+for i = 1 : length(dateRange);
+    Date = datevec(dateRange(i));
+    Date = Date(1:3);
+    rdata = r_import(Date);
+    
+    rdata = rdata(:,1);
+    
+    n = hist(rdata,[0:size(station_loc,1)]);
+    
+    tfile(i,1) = dateRange(i);
+    tfile(i,2:end) = n;
+    
+    fprintf('%s Done - %.2f seconds elapsed\n',datestr(dateRange(i)),toc);
+    
 end
-date=datevec(tfile(end,1));
-tfileName=sprintf('T%04g%02g%02g.dat',date(1:3));
+
+tfileName=sprintf('T%04g%02g%02g.dat',Date(1:3));
 tab_export(tfileName,tfile);
-
-%% Print names/dates
-
-if true
-    on = tfile(:,2:end) > 5000;
-    for i = 1 : size(station_loc,1)
-        onDays = find(on(:,i));
-        if ~isempty(onDays)
-            fprintf('%s - %s\n',station_name{i},datestr(tfile(onDays(1),1)));
-        end
-    end
-end
