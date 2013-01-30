@@ -13,7 +13,7 @@ for i = 1 : length(dateRange);
     
     rdata = rdata(:,1);
     
-    n = hist(rdata,[0:size(station_loc,1)]);
+    n = hist(rdata,[0:size(station_loc,1)-1]);
     
     tfile(i,1) = dateRange(i);
     tfile(i,2:end) = n;
