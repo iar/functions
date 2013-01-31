@@ -12,30 +12,17 @@ for i = 1 : size(dataPath,1);
         pathAlt = dataPath{i};
     end
 end
-% path = dataPath{1};
-% pathAlt = dataPath{2};
 
 r_path = sprintf('%sRfiles/',path);
 r_path_alt = sprintf('%sRfiles/',pathAlt);
 
-
 if strmatch(class(date),'double')
-
-    if length(date)==3
-        Range='day';
-    elseif length(date)==4
-        Range='hour';
-    elseif length(date)>=5
-        Range='minute';
-    end
-
-    RData=[0 0 0];
-
-    if strcmp(Range,'day');
-        if datenum(date) <= datenum([2005,7,26])
-            for i = 0 : 23
-                Date=[date(1:3),i];
-                fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:4)));
+    
+    if datenum(date) <= datenum([2005,7,26])
+        for i = 0 : 23
+            Date=[date(1:3),i];
+            fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:4)));
+            if fid > -1
                 rdata=fscanf(fid,'%g %f %g',[3,Inf]);
                 rdata=rdata';
                 fclose all;
@@ -44,43 +31,30 @@ if strmatch(class(date),'double')
                 else
                     RData=[RData;rdata];
                 end
-            end            
-        else
-            for i=0:10:1440
-                Date=datevec(datenum([date(1:3),0,i,0]));
-                fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:5)));
-                rdata=fscanf(fid,'%g %f %g',[3,Inf]);
-                rdata=rdata';
-                fclose all;
-                if size(RData,1)==1
-                    RData=rdata;
-                else
-                    RData=[RData;rdata];
-                end
-            end
-        end
-    elseif strcmp(Range,'hour');
-        for i=0:10:50
-            Date=datevec(datenum([date(1:4),i,0]));
-            fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:5)));
-            rdata=fscanf(fid,'%g %f %g',[3,Inf]);
-            rdata=rdata';
-            fclose all;
-            if size(RData,1)==1
-                RData=rdata;
             else
-                RData=[RData;rdata];
+                fprintf('R%04g%02g%02g%02g Missing\n',Date(1:4));
+            end
+        end            
+    else
+        for i=0:10:1440
+            Date=datevec(datenum([date(1:3),0,i,0]));
+            fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:5)));
+            if fid > -1
+
+                rdata=fscanf(fid,'%g %f %g',[3,Inf]);
+                rdata=rdata';
+                fclose all;
+                if size(RData,1)==1
+                    RData=rdata;
+                else
+                    RData=[RData;rdata];
+                end
+            else
+                fprintf('R%04g%02g%02g%02g%02g Missing\n',Date(1:5));
             end
         end
-    elseif strcmp(Range,'minute')
-        Date=datevec(datenum([date(1:4),floor(date(5)/10)*10,0]));
-        fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:5)));
-        rdata=fscanf(fid,'%g %f %g',[3,Inf]);
-        rdata=rdata';
-        fclose all;
-        RData=rdata;
-
     end
+    
 elseif strmatch(class(date),'char')
     fid=fopen(date);
     rdata=fscanf(fid,'%g %f %g',[3,Inf]);
