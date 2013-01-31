@@ -18,6 +18,8 @@ r_path_alt = sprintf('%sRfiles/',pathAlt);
 
 if strmatch(class(date),'double')
     
+    RData=[0 0 0];
+
     if datenum(date) <= datenum([2005,7,26])
         for i = 0 : 23
             Date=[date(1:3),i];
