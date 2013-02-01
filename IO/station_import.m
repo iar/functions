@@ -19,6 +19,6 @@ function [station_loc,station_name] = station_import(filename)
        s=fgets(fid);
        index=index+1; 
     end
-    fclose all;
+    fclose(fid);
 end
 
