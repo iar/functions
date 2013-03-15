@@ -24,6 +24,10 @@ if strmatch(class(date),'double')
         for i = 0 : 23
             Date=[date(1:3),i];
             fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:4)));
+            if fid == -1
+                fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g',r_path_alt,Date(1),Date(1:2),Date(1:4)));
+            end
+                
             if fid > -1
                 rdata=fscanf(fid,'%g %f',[2,Inf]);
                 rdata=rdata';
@@ -43,6 +47,10 @@ if strmatch(class(date),'double')
         for i=0:10:1440
             Date=datevec(datenum([date(1:3),0,i,0]));
             fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:5)));
+            if fid == -1
+                fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',r_path_alt,Date(1),Date(1:2),Date(1:5)));
+            end
+            
             if fid > -1
 
                 rdata=fscanf(fid,'%g %f %g',[3,Inf]);
