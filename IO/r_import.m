@@ -25,9 +25,11 @@ if strmatch(class(date),'double')
             Date=[date(1:3),i];
             fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:4)));
             if fid > -1
-                rdata=fscanf(fid,'%g %f %g',[3,Inf]);
+                rdata=fscanf(fid,'%g %f',[2,Inf]);
                 rdata=rdata';
                 fclose all;
+                rdata=[rdata,zeros(size(rdata,1),1)];
+
                 if size(RData,1)==1
                     RData=rdata;
                 else
