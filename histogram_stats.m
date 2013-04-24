@@ -1,4 +1,4 @@
-function [ histMean, histMedian, histStd, histMad ] = histogram_stats(histogram, base)
+function [ histStats ] = histogram_stats(histogram, base)
 % HISTOGRAM_STATS returns the mean, median, standard deviation, and median
 %   absolute deviation for an input histogram given the base vector.
 
@@ -13,10 +13,15 @@ function [ histMean, histMedian, histStd, histMad ] = histogram_stats(histogram,
         index = nextIndex;
     end
 
-    histMean = mean(vector);
+    histMean   = mean(vector);
     histMedian = median(vector);
-    histStd = std(vector);
-    histMad = mad(vector);
+    histStd    = std(vector);
+    histMad    = mad(vector);
+    histPop25  = prctile(vector,25);
+    histPop75  = prctile(vector,75);
+    
+    histStats = [histMean, histMedian, histStd, histMad,...
+                 histPop25, histPop75];
 
 end
 
