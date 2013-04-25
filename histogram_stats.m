@@ -2,6 +2,17 @@ function [ histStats ] = histogram_stats(histogram, base)
 % HISTOGRAM_STATS returns the mean, median, standard deviation, and median
 %   absolute deviation for an input histogram given the base vector.
 
+
+    % If histogram contains more than 1e7 elements, reduce down to
+    %   at most 1e7 elements to allow for speed.
+    %   display warning as well
+    
+    if sum(histogram) >= 1e7
+        reduce = log10(sum(histogram)) - 7;
+        histogram=ceil(histogram./(10^reduce));
+        warning('Histogram contains more than 1e7 elements: will be reduced')
+    end
+
     vector = zeros(sum(histogram),1);
     index = 1;
     for i = 1 : length(base)
