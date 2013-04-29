@@ -13,6 +13,14 @@ function [pathDay,pathNight]=terminator(lat1,long1,time,lat2,long2)
     lat2 = lat2(:);
     long2 = long2(:);
     
+    % If any inputs are empty, output empty (instead of crashing)
+    
+    if isempty(time) || isempty(lat1) || isempty(long1) ||...
+                       isempty(lat2) || isempty(long2)
+        pathDay = [];
+        pathNight = [];
+        return
+    end
     
     % Check long/lat pairs are of the same length
     
