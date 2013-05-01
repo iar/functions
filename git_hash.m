@@ -10,7 +10,7 @@ function [ hash ] = git_hash(directory)
 
     current_directory = pwd;
     cd(directory)
-    !git rev-list --max-count=1 HEAD
+    [~,hash] = system('git rev-list --max-count=1 HEAD');
     cd(current_directory)
 
 end
