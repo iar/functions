@@ -31,6 +31,9 @@ function wwlln_plot( startDate, endDate, varargin )
 %       Plot from 2012/05/01 to 2012/05/30 at a resolution of 0.5 degrees
 %           over the Western US, axis ticks every 5 degrees and all bins
 %           with 0 strokes removed from the plot.
+%
+
+%   Requires ae_import.m and de_import.m
 
     Options=varargin;
     Contour = false;
