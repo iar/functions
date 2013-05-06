@@ -1,13 +1,14 @@
 function wwlln_plot( startDate, endDate, varargin )
-%WWLLN_PLOT(ndata, options)
+%WWLLN_PLOT(startDate, endDate, options) plots WWLLN data between startDate and
+%   endDate with the following options available:
 %   Options:
-%     'DE' - Corrects for detection efficiency
-%     'Contour' - Plots as contour instead of density
-%     'Resolution',resolution - Override default resolution
-%     'Stations',station_number - Plot stations on map
-%     'Title',titletext - Give plot title 'titletext'
-%     'Save',savename - save figure as 'savename'
-%     'Log',true/false - Plots as log of the density (default true)
+%     'DE' - Corrects for detection efficiency 
+%     'Contour' - Plots as contour instead of density 
+%     'Resolution',resolution - Override default resolution [default = 1]
+%     'Stations',station_number - Plot stations on map 
+%     'Title',titletext - Give plot title 'titletext' 
+%     'Save',savename - save figure as 'savename' 
+%     'Log',true/false - Plots as log of the density [default true]
 %     'Zoom' - Zooms view to ndata strokes
 %     'XWindow' - Set Xlim of plot
 %     'YWindow' - Set Ylim of plot
@@ -24,6 +25,12 @@ function wwlln_plot( startDate, endDate, varargin )
 %     'squareKM' - Plots in strokes/km^2/year, time is days spanned
 %           by data
 %     'Alpha' - [Density] sets 0 strokes to transparent instead of blue
+%
+%   e.g. wwlln_plot([2012,05,01], [2012,05,30],'Resolution',0.5,'XWindow',...
+%               [-150, -90],'YWindow',[20, 60],'SmallTicks',5,'Alpha')
+%       Plot from 2012/05/01 to 2012/05/30 at a resolution of 0.5 degrees
+%           over the Western US, axis ticks every 5 degrees and all bins
+%           with 0 strokes removed from the plot.
 
     Options=varargin;
     Contour = false;
