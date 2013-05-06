@@ -274,8 +274,8 @@ function wwlln_plot( startDate, endDate, varargin )
         
         if SmallTick
             
-            set(gca,'XTick',[1:smalltick/res:360/res,360/res])
-            set(gca,'YTick',[1:smalltick/res:180/res,180/res]) 
+            set(gca,'XTick',[1:smalltick/res:360/res])
+            set(gca,'YTick',[1:smalltick/res:180/res]) 
             set(gca,'XTickLabel',-180:smalltick:180)
             set(gca,'YTickLabel',-90:smalltick:90) 
         
