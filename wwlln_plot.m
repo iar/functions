@@ -16,13 +16,14 @@ function wwlln_plot( startDate, endDate, varargin )
 %     'ColorMin',cbarmin - Sets minumum colorbar to 10^cbarmax
 %     'NoFigure' - does not create new figure (used for subplots)
 %     'SmallTick',size - Sets tick marks at size degree resolution
-%     'Blue' - Makes a bin of 0 strokes colorbar 0 instead of white
+%     'Blue' - [Contour only] Makes a bin of 0 strokes colorbar 0 instead of white
 %     'Coast','high'/'low',color - Adjusts the coastlines plotted
 %           high/low determines the level of detail
 %           color specifies the color as matlab colorspec 'k' - black,
 %                'w' - white 
 %     'squareKM' - Plots in strokes/km^2/year, time is days spanned
 %           by data
+%     'Alpha' - [Density] sets 0 strokes to transparent instead of blue
 
     Options=varargin;
     Contour = false;
@@ -46,6 +47,7 @@ function wwlln_plot( startDate, endDate, varargin )
     xwin=false;
     ywin=false;
     km=false;
+    Alpha = false;
     
     %strcmp(Options)
     for i=1:length(Options)
@@ -53,6 +55,8 @@ function wwlln_plot( startDate, endDate, varargin )
             res=Options{i+1};
         elseif strncmp(Options{i},'DE',2)
             DE = true;
+        elseif strncmp(Options{i},'Alpha',5)
+            Alpha = true;
         elseif strncmp(Options{i},'Contour',7)
             Contour = true;
         elseif strncmp(Options{i},'Stations',8)
@@ -257,6 +261,18 @@ function wwlln_plot( startDate, endDate, varargin )
     
     axis equal
     set(gcf,'Color','w')
+    
+    if Alpha
+        set(gca,'Color',[.75,.75,.75]);
+        set(gcf,'Color',[1 1 1]);
+        if Log
+            alphaMap = isnan(data) | isinf(data);
+        else
+            alphaMap = data == 0;
+        end
+                
+        alpha(double(~alphaMap));
+    end
 
     %% Format Axis
     
