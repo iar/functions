@@ -1,6 +1,7 @@
 function wwlln_plot( startDate, endDate, varargin )
 %WWLLN_PLOT(ndata, options)
 %   Options:
+%     'DE' - Corrects for detection efficiency
 %     'Contour' - Plots as contour instead of density
 %     'Resolution',resolution - Override default resolution
 %     'Stations',station_number - Plot stations on map
@@ -25,6 +26,7 @@ function wwlln_plot( startDate, endDate, varargin )
 
     Options=varargin;
     Contour = false;
+    DE = false;
     Log=true; 
     res=1;
     titletext=[];
@@ -49,6 +51,8 @@ function wwlln_plot( startDate, endDate, varargin )
     for i=1:length(Options)
         if strncmp(Options{i},'Resolution',4)
             res=Options{i+1};
+        elseif strncmp(Options{i},'DE',2)
+            DE = true;
         elseif strncmp(Options{i},'Contour',7)
             Contour = true;
         elseif strncmp(Options{i},'Stations',8)
@@ -126,18 +130,57 @@ function wwlln_plot( startDate, endDate, varargin )
         
         centers = {-180+res/2:res:180-res/2,-90+res/2:res:90-res/2};
         
-        [ndata,c] = hist3([data(:,8),data(:,7)],'Ctrs',centers);% Extract histogram data
-        
-        if i == start
-            dataSum = ndata;
+        if DE
+            
+            [de,de_high,~] = de_import(i);
+            
+            if res == 360/size(de,1);
+                deMap = de;
+            elseif res == 1
+                deMap = de_high;
+            elseif res < 1 && mod(1/res,1) == 0
+                for k = 1 : 24;
+                    deMap(:,:,k) = matrix_expand(de_high(:,:,k),1/res);
+                end
+            else
+                error('Detection efficiency maps not compatible with resolution')
+                
+            end
+            
+            for j = 0 : 23
+
+                [ndata,c] = hist3([data(data(:,4) == j,8),data(data(:,4) == j,7)],'Ctrs',centers);% Extract histogram data
+                
+                ndata(ndata<2) = 0;
+                
+                ndata = ndata ./ deMap(:,:,j + 1);
+                
+                if i == start
+                    dataSum = ndata;
+                else
+                    dataSum = dataSum + ndata;
+                end
+                
+            end
+            
         else
-            dataSum = dataSum + ndata;
+            
+            [ndata,c] = hist3([data(:,8),data(:,7)],'Ctrs',centers);% Extract histogram data
+            
+            if i == start
+                dataSum = ndata;
+            else
+                dataSum = dataSum + ndata;
+            end
+        
         end
     end
     
     data = dataSum';
     
     %% Adjust data
+    
+    
     
     % Set to strokes/km^2/year
     if km
@@ -205,8 +248,8 @@ function wwlln_plot( startDate, endDate, varargin )
         imagesc(data);
         hold on
         set(gca,'YDir','normal')
-        scatter((station_loc(stationPlot+1,2)+180-res/2)./res,(station_loc(stationPlot+1,1)+90-res/2)./res,100,'r^','Filled')
-        plot((long+180-res/2)./res,(lat+90-res/2)./res,'k');
+        scatter((station_loc(stationPlot+1,2)+180)./res,(station_loc(stationPlot+1,1)+90)./res,100,'r^','Filled')
+        plot((long+180)./res + 0.5,(lat+90)./res + 0.5,'k');
         
     end
         
@@ -268,23 +311,20 @@ function wwlln_plot( startDate, endDate, varargin )
         end
         
     else
-      
-        plot((long+180-res/2)./res,(lat+90-res/2)./res,'k');
-
     
         if Zoom
-            xlim(([xRange(1),xRange(end)]+180-res/2)./res);
-            ylim(([yRange(1),yRange(end)]+90-res/2)./res);
+            xlim(([xRange(1),xRange(end)]+180)./res + 0.5);
+            ylim(([yRange(1),yRange(end)]+90)./res + 0.5);
         else
-            xlim(([-180,180]+180)./res)
-            ylim(([-90,90]+90)./res)
+            xlim(([-180,180]+180)./res + 0.5)
+            ylim(([-90,90]+90)./res + 0.5)
         end
     
         if xwin
-            xlim((xwindow+180-res/2)./res)
+            xlim((xwindow+180)./res + 0.5)
         end
         if ywin
-            ylim((ywindow+90-res/2)./res)
+            ylim((ywindow+90)./res + 0.5)
         end        
     end
     
