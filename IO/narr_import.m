@@ -47,7 +47,7 @@ function [ air, shum, level, grid ] = narr_import( date, narrPath )
 
     %% Check for nc files or download
 
-        ftpServer = 'ftp://ftp.cdc.noaa.gov/datesets/NARR/pressure/';
+        ftpServer = 'ftp://ftp.cdc.noaa.gov/NARR/pressure/';
 
         currentPath = pwd;
 
