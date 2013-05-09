@@ -43,7 +43,8 @@ if Degree && max(abs(Y))>90
     
 end
     
-
+X = X(:);
+Y = Y(:);
 
 eval(sprintf('center=[%s(X),%s(Y)];',centering,centering));
 
