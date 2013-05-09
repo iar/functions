@@ -35,7 +35,12 @@ if length(X)<=1
 end
 
 if Degree && max(abs(Y))>90
-    error('Lat/long switched')
+    
+    Xnew = Y;
+    Ynew = X;
+    X = Xnew;
+    Y = Ynew;
+    
 end
     
 
