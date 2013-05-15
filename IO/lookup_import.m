@@ -27,19 +27,3 @@ function [lookup,div,station]=lookup_import(filename)
     fclose(fid);
     div=360/size(lookup,1);
 end
-
-
-
-
-
-% Write Lookup file
-% 
-% fid=fopen('lookup_night.dat','wt');
-% for j=1:size(lookup_night,3);
-%     for i=1:size(lookup_night,1);
-%         fprintf(fid,'%g\t',lookup_night(i,:,j));
-%         fprintf(fid,'\n');
-%     end
-%     fprintf(fid,'\n');
-% end
-        

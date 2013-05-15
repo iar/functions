@@ -16,10 +16,7 @@ function [ chosen ] = random_from_vector( vector, number, seed )
             RandStream.setDefaultStream(s);
             warning on
     end
-            
-
-
-    
+              
     chosen = zeros(number,1);
     for i = 1 : number
         choose = 1 + floor(rand() * length(vector));
