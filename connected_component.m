@@ -4,6 +4,7 @@ function [dataGrouped,groupNum]=connected_component(data,rdist,zdist)
 %   formatted data
 
 %   Created by: Michael Hutchins 
+
 switch nargin
     case 1
         rdist=0.25;

@@ -1,5 +1,7 @@
 function [ db ] = field_to_db( field, reference)
 %field_to_db converts field measurements to decibels
+%
+%   Written By:  Michael Hutchins
 
     switch nargin
         case 1

@@ -1,5 +1,7 @@
 function [ location ] = find_array( value, array )
 %FIND_ARRAY finds the index location of VALUE in ARRAY for 2D arrays.
+%
+%   Written By:  Michael Hutchins
 
     location = zeros(length(value),2);
 

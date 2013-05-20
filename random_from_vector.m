@@ -4,6 +4,8 @@ function [ chosen ] = random_from_vector( vector, number, seed )
 %   random_from_vector(vector) will choose a single random element
 %   random_from_vector(vector, N), will choose N random elements
 %   random_from_vector(vector,N,SEED), will choose N with the seed SEED.
+%
+%   Written By:  Michael Hutchins
 
     switch nargin
         case 1

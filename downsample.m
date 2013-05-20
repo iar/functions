@@ -3,6 +3,8 @@ function [ Y ] = downsample( X , factor )
 %   the resolution by factor. So a 100 x 1 with a factor of 2 becomes a 
 %   50 x 1 array. Works up to 2-D arrays.
 %   Note: Uneven ends are padded with zeros so they may need to be scaled
+%
+%   Written By:  Michael Hutchins
 
     if mod(size(X,1),factor) ~= 0
         paddingX = factor - mod(size(X,1),factor);

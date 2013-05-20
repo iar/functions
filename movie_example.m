@@ -1,3 +1,6 @@
+%
+%   Written By:  Michael Hutchins
+
 aviobj=avifile('movie_name.avi');
 
 %insert figure code here in for loop

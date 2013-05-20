@@ -1,6 +1,8 @@
 function [cores] = parallel_start( pools )
 %PARALLEL_START spins up POOLS matlabpools or 1 per avaialble core if POOLS
 %   is not specified.
+%
+%   Written By:  Michael Hutchins
 
     switch nargin
         case 0

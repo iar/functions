@@ -2,6 +2,8 @@ function [data] = entln_import(date)
 %Imports an ENTLN .CSV lightning file
 %Output is YYYY, MM, DD, hh, mm, ss, lat, long, height (m), stroke type,
 %amplitude (A), stroke_solution
+%
+%   Written By:  Michael Hutchins
 
 import=true;
 

@@ -6,7 +6,8 @@ function [ interstroke ] = interstroke_time( data , resTime, resDist )
     % In general: <1ms are the same process for a single stroke
     %             1ms - 1s are the same flash
     %             1s to 600s are the same storm (upper bound not strict)
-    
+%
+%   Written By:  Michael Hutchins    
     
     resTimeDefault = 1;
     resDistDefault = 25;

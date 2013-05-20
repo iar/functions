@@ -1,5 +1,7 @@
 function lightningPlot( data , varargin )
 %lightningPlot takes in WWLLN formatted data and genrates a global plot.
+%
+%   Written By:  Michael Hutchins
 
 %% Load coastal data
     load coast_high

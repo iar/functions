@@ -1,6 +1,8 @@
 function [data] = a_import(date)
 %%A_IMPORT(date) imports an A file from date. Date can be given as a
 %%date vector [yyyy,mm,dd], a datenum, or as a filename
+%
+%   Written By:  Michael Hutchins
 
 dataPath = textread('dataPath.dat','%s\n');
 index = 1;

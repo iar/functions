@@ -32,6 +32,8 @@ function wwlln_plot( startDate, endDate, varargin )
 %           over the Western US, axis ticks every 5 degrees and all bins
 %           with 0 strokes removed from the plot.
 %
+%
+%   Written By:  Michael Hutchins
 
 %   Requires ae_import.m and de_import.m
 

@@ -1,5 +1,8 @@
 function [ area ] = areaMap( resolution )
 %AREAMAP Generates a map of the area per degree resolution in square kilometers
+%
+%   Written By:  Michael Hutchins
+
 res=resolution;
 area=zeros(180/res,1);
 index=1;

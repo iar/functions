@@ -1,5 +1,7 @@
 %Export data to file
 function wwlln_export(data,filename)
+%
+%   Written By:  Michael Hutchins
 
 
 fid=fopen(filename,'wt');

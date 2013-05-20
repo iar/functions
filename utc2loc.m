@@ -1,4 +1,7 @@
 function [local_time]=utc2loc(time,longitude)
+%
+%   Written By:  Michael Hutchins
+
     time=time(:);
     A=time+longitude./15;
     B=zeros(size(time,1),1);

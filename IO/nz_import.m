@@ -1,4 +1,6 @@
 function [ data ] = nz_import(filename)
+%
+%   Written By:  Michael Hutchins
 
 fid=fopen(filename);
 

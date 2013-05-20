@@ -1,4 +1,6 @@
 function [Power]=i2p(Ipeak)
+%
+%   Written By:  Michael Hutchins
 
 Ipeak=abs(Ipeak);
 

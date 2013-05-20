@@ -1,6 +1,8 @@
 function [ histStats ] = histogram_stats(histogram, base)
 % HISTOGRAM_STATS returns the mean, median, standard deviation, and median
 %   absolute deviation for an input histogram given the base vector.
+%
+%   Written By:  Michael Hutchins
 
 
     % If histogram contains more than 1e7 elements, reduce down to

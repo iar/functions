@@ -1,4 +1,6 @@
 function [frequency,spectra]=power_spectra(waveform,samples,rate)
+%
+%   Written By:  Michael Hutchins
 
 Fs=rate;
 T=1/Fs;

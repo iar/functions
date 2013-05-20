@@ -3,7 +3,9 @@ function [ air, shum, level, grid ] = narr_import( date, narrPath )
 %   Read in netCDF date from Reanalysis
 %   Using NARR Reanalysis 3-hour date: http://www.esrl.noaa.gov/psd/date/gridded/date.narr.html
 %   ftp://ftp.cdc.noaa.gov/datesets/NARR/pressure/
- 
+ %
+%   Written By:  Michael Hutchins
+
     switch nargin
         case 1
             index=1;

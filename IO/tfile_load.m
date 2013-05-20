@@ -1,5 +1,7 @@
 % This is wrong since it it looking at used packets while a tfile looks at
 % total packets sent via rfiles. Woops. Only use TfilesThru5-11.txt
+%
+%   Written By:  Michael Hutchins
 
 tfile=tfile_import('TfilesThru5-11.txt');
 tic;

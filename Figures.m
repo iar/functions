@@ -1,6 +1,8 @@
 function Figures(fig,Font)
 %Figures sets the fontsize of the given or current figure to Fontsize 14
 %   Colorbar handles must be passed manually
+%
+%   Written By:  Michael Hutchins
 
 switch nargin
     case 0

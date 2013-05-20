@@ -1,4 +1,6 @@
 function lon = wrap180(lon)
+%
+%   Written By:  Michael Hutchins
 
 q = (lon < -180) | (180 < lon);
 

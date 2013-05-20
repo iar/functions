@@ -1,4 +1,7 @@
 %Export data_power to file
+%
+%   Written By:  Michael Hutchins
+
 function power_export(data,filename)
 
 

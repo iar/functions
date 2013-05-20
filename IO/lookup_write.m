@@ -1,4 +1,6 @@
 function lookup_write( lookup, filename, station_name, station_loc )
+%
+%   Written By:  Michael Hutchins
 
     fid=fopen(filename,'wt');
     for j=startIndex:size(lookup,3);

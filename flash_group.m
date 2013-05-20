@@ -6,6 +6,8 @@ function [ flash ] = flash_group( data )
     % energy][median energy][multiplicty]
     % Area is found as the the circle defined by the mean distance from
     % stroke to centroid
+%
+%   Written By:  Michael Hutchins
 
 
     resDist = 25;

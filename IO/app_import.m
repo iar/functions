@@ -1,5 +1,7 @@
 function [data] = app_import(date)
 %Imports an altered A file that includes power information for each station
+%
+%   Written By:  Michael Hutchins
 
 app_path='/Volumes/Time Machine/Data/APP_files/';
 

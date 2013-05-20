@@ -1,4 +1,7 @@
 function result=locTest(input)
+%
+%   Written By:  Michael Hutchins
+
     altTest=input>0;
     altLoc=false(size(altTest));
     for n=1:length(altTest);

@@ -1,5 +1,8 @@
 function [lookup,div]=lookup_temp_import(filename)
 %lookup_import Loads the lookup text file
+%
+%   Written By:  Michael Hutchins
+
     fid=fopen(filename);
     fend=feof(fid);
     s=fgets(fid);

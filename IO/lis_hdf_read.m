@@ -1,5 +1,7 @@
 function [ flashes ] = lis_hdf_read( filename )
 %LIS_HDF_READ imports LIS hdf files and extracts flash data
+%
+%   Written By:  Michael Hutchins
 
 flash = hdfread(filename,'flash');
 

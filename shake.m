@@ -1,5 +1,7 @@
 function [out]=shake(in,center,shakes)
-   
+%
+%   Written By:  Michael Hutchins
+
 switch nargin
     case 1
         center=1;

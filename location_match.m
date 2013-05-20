@@ -6,6 +6,8 @@ function [ match ] = location_match( lat, long, latTable, longTable )
 % If multiple matches are found the mode of the result is used as the
 % output
 % Note: only use with smoothly varying tables
+%
+%   Written By:  Michael Hutchins
 
     match = zeros(length(lat),2);
 

@@ -1,5 +1,7 @@
 function [conversion] = conversion_import(filename)
 %CONVERSION_IMPORT Imports the WWLLN station conversion data
+%
+%   Written By:  Michael Hutchins
 
 fid=fopen(filename);
 

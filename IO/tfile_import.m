@@ -1,5 +1,7 @@
 function [ Tfile ] = tfile_import(filename)
 %tfile_import Import t-file to workspace
+%
+%   Written By:  Michael Hutchins
 
 fid=fopen(filename);
 s=fgets(fid);

@@ -1,5 +1,7 @@
 % TfileUpdate updates T files to the latest data, or regenerates it from
 % the R-files
+%
+%   Written By:  Michael Hutchins
 
 stations
 tic;

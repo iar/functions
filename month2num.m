@@ -1,4 +1,7 @@
 %Converts month string 'mmm' to month number
+%
+%   Written By:  Michael Hutchins
+
 function [month]=month2num(mmm)
 switch mmm
     case 'Jan'

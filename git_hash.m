@@ -2,6 +2,8 @@ function [ hash ] = git_hash(directory)
 %git_hash returns the git hash of the current commit for the current directory
 %   The optinal argument directory will get the hash for the specified
 %   location
+%
+%   Written By:  Michael Hutchins
 
     switch nargin
         case 0

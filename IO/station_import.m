@@ -1,5 +1,8 @@
 function [station_loc,station_name] = station_import(filename)
 %station_import Imports stations.dat file to stations.mat
+%
+%   Written By:  Michael Hutchins
+
     fid=fopen(filename);
     fend=feof(fid);
     s=fgets(fid);

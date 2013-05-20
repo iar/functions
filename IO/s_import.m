@@ -1,5 +1,7 @@
 function [data,waveform] = s_import(filename)
 %Imports an altered A file that includes power information for each station
+%
+%   Written By:  Michael Hutchins
 
 fid=fopen(filename);
 s=fgets(fid);

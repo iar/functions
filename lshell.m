@@ -1,5 +1,7 @@
 function [ LShell ] = lshell(lat,long)
 %LSHELL returns the magnetic l-shell value for the given LAT and LONG.
+%
+%   Written By:  Michael Hutchins
 
 rEarth=6371;
 NOW=now;

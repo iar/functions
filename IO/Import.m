@@ -1,4 +1,6 @@
 function [Data]=Import(Year,Month,Day,Length,region,lat,long,local)
+%
+%   Written By:  Michael Hutchins
 
 switch nargin
     case 3

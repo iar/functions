@@ -1,4 +1,7 @@
 %Converts lat/long pairs into kilometers from equator/meridian
+%
+%   Written By:  Michael Hutchins
+
 function [northKM,eastKM]=deg2km(lat,long)
 lat=lat(:);
 long=long(:);

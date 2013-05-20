@@ -3,6 +3,8 @@ function [pathDay,pathNight]=terminator(lat1,long1,time,lat2,long2)
 % along the path instead of the intersection with the actual terminator
 % Can take in multiple values for lat2/long2 for a given value of
 % lat1/long1
+%
+%   Written By:  Michael Hutchins
 
 % http://en.wikipedia.org/wiki/Position_of_the_Sun
 

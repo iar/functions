@@ -1,5 +1,7 @@
 function [ parallel ] = parallel_check
 %PARALLEL_CHECK returns true if parallel computing toolbox is installed
+%
+%   Written By:  Michael Hutchins
 
     A = ver;
     
