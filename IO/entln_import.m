@@ -106,9 +106,14 @@ if import
         else
             nstn=length(E)-2;
         end
-        
-        data(index,:)=[A(9:19)',B,nstn];
-        index=index+1;
+       
+		try 
+        	data(index,:)=[A(9:19)',B,nstn];
+       	catch
+			data(index,:)=[A(3:13)',B,nstn];
+		end
+
+		index=index+1;
         fend=feof(fid);
     end
 
