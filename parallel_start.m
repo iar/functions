@@ -11,9 +11,11 @@ function [cores] = parallel_start( pools )
             cores = pools;
     end
     
-    curretPool = matlabpool('size');
+    currentPool = matlabpool('size');
     
-    if currentPool ~= cores
+    if currentPool == 0
+	matlabpool(cores)
+    elseif currentPool ~= cores
         matlabpool close
         matlabpool(cores)
     end
