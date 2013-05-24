@@ -416,11 +416,13 @@ function wwlln_plot( startDate, endDate, varargin )
     
     %% Save
     if Save
+		set(gcf,'renderer', 'zbuffer'); 		
+
         if ScreenSize
             set(gcf,'PaperPositionMode','auto')
             print(gcf, '-dpng', savename);
         else
-            saveas(gcf,savename);
+            print(gcf,savename,'-dpng');
         end
     end
 end
