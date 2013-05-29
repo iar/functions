@@ -16,7 +16,7 @@ function [ match ] = location_match( lat, long, latTable, longTable )
     latTable = latTable(:);
     longTable = longTable(:);
 
-    for i = 1 : length(lat);
+    parfor i = 1 : length(lat);
 
         tolerance = 0.1;
         location = [];
@@ -26,10 +26,12 @@ function [ match ] = location_match( lat, long, latTable, longTable )
             loc = abs(latTable - lat(i)) < tolerance &...
                   abs(longTable - long(i)) < tolerance;
 
-            [I, J] = ind2sub(tableSize,find(loc));  
-            location = [I,J]; 
-
-            tolerance = 2 * tolerance;
+            if sum(loc) >= 1
+                [I, J] = ind2sub(tableSize,find(loc));  
+                location = [I,J]; 
+            else
+                tolerance = 2 * tolerance;
+            end
 
         end
 
