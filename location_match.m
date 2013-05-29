@@ -18,13 +18,13 @@ function [ match ] = location_match( lat, long, latTable, longTable )
 
     for i = 1 : length(lat);
 
-        tolerance = 0.05;
+        tolerance = 0.1;
         location = [];
 
         while isempty(location)
 
-            loc = abs(latTable - lat(i)) < tolerance;
-            loc = loc & abs(longTable - long(i)) < tolerance;
+            loc = abs(latTable - lat(i)) < tolerance &...
+                  abs(longTable - long(i)) < tolerance;
 
             [I, J] = ind2sub(tableSize,find(loc));  
             location = [I,J]; 
