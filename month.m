@@ -1,10 +1,10 @@
 function [mmm]=month(month_number)
 %Converts month date in number format to three day month
 
+month_number = mod(month_number,12);
+
 %by: Michael Hutchins
 switch month_number
-    case 0
-        mmm='Dec';
     case 1
         mmm='Jan';
     case 2
@@ -27,9 +27,7 @@ switch month_number
         mmm='Oct';
     case 11
         mmm='Nov';
-    case 12
+    case 0
         mmm='Dec';
-    case 13
-        mmm='Jan';
 end
 end
