@@ -285,6 +285,8 @@ function wwlln_plot( startDate, endDate, varargin )
                 
         alpha(double(~alphaMap));
     end
+    
+    keyboard
 
     %% Format Axis
     
@@ -416,7 +418,7 @@ function wwlln_plot( startDate, endDate, varargin )
     
     %% Save
     if Save
-		set(gcf,'renderer', 'zbuffer'); 		
+%		set(gcf,'renderer', 'zbuffer'); 		
 
         if ScreenSize
             set(gcf,'PaperPositionMode','auto')
