@@ -18,6 +18,7 @@ function wwlln_plot( startDate, endDate, varargin )
 %     'NoFigure' - does not create new figure (used for subplots)
 %     'SmallTick',size - Sets tick marks at size degree resolution
 %     'Blue' - [Contour only] Makes a bin of 0 strokes colorbar 0 instead of white
+%     'Grey' - Greyscale
 %     'Coast','high'/'low',color - Adjusts the coastlines plotted
 %           high/low determines the level of detail
 %           color specifies the color as matlab colorspec 'k' - black,
@@ -59,6 +60,7 @@ function wwlln_plot( startDate, endDate, varargin )
     xwin=false;
     ywin=false;
     km=false;
+    grayScale = false;
     Alpha = false;
     
     %strcmp(Options)
@@ -100,6 +102,8 @@ function wwlln_plot( startDate, endDate, varargin )
             screenPixel=Options{i+1};
         elseif strncmp(Options{i},'Blue',4)
             Blue=true;
+        elseif strncmp(Options{i},'Gray',4)
+            grayScale = true;
         elseif strncmp(Options{i},'Coast',5)
             if strncmp(Options{i+1},'high',4)
                 CoastDetail=1;
@@ -285,8 +289,6 @@ function wwlln_plot( startDate, endDate, varargin )
                 
         alpha(double(~alphaMap));
     end
-    
-    keyboard
 
     %% Format Axis
     
@@ -386,6 +388,23 @@ function wwlln_plot( startDate, endDate, varargin )
         set(gca,'Color',cMap(1,:))
     end
     
+    % Set grayscale
+    if grayScale
+        set(gca,'Color',[1 1 1])
+        if ColorMax || ColorMin
+            if Log
+                cMap=gray((cHigh-cLow)*3);
+            else
+                cMap=gray(cHigh-cLow);
+            end
+        else
+            cMap=gray(ceil(max(max(data)))*3);
+        end
+        
+        cMap = flipud(cMap);
+        
+    end
+    
     h=colorbar;
     set(h,'Location','SouthOutside')
     caxis([cLow cHigh])
@@ -418,13 +437,16 @@ function wwlln_plot( startDate, endDate, varargin )
     
     %% Save
     if Save
-%		set(gcf,'renderer', 'zbuffer'); 		
+		set(gcf,'renderer', 'painters'); 		
+
+        printType = sprintf('-d%s',savename(end-2:end));
 
         if ScreenSize
             set(gcf,'PaperPositionMode','auto')
-            print(gcf, '-dpng', savename);
+            set(gcf,'PaperOrientation','landscape')
+            print(gcf,printType, savename);
         else
-            print(gcf,savename,'-dpng');
+            print(gcf,savename,printType);
         end
     end
 end
