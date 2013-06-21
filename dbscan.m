@@ -1,4 +1,4 @@
-function [ output_args ] = dbscan( D, eps, minPts )
+function [ clusters ] = dbscan( D, eps, minPts )
 %DBSCAN clustering of data D into clusters with distance less than eps and at least minPts members.
 % http://en.wikipedia.org/wiki/DBSCAN
 %
@@ -8,14 +8,14 @@ function [ output_args ] = dbscan( D, eps, minPts )
 	points = size(D,1);
 	visited = false(points,1);
 	noise = visited;
-	unvisited = [1 : points];
+	clusters = zeros(points,1);
+	
 	
 	while sum(visited) < points
 		
 		% Select a point and mark it as visited
-		P = unvisited(1);
+		P = find(~visited,1,'first');
 		visited(P) = true;
-		unvisited(P) = [];
 		
 		neighbors = regionQuery(P, D, eps);
 		
@@ -23,12 +23,34 @@ function [ output_args ] = dbscan( D, eps, minPts )
 			noise(P) = true;
 		else
 			C = C + 1;
-			epandCluster(P, neighbors, C, eps, minPts)
-		
-	end	
+			% Expand Cluster
+			clusters(P) = C;
+			index = 1;
+			while index < length(neighbors)
+				try
+				Pprime = neighbors(index);
+				catch
+					keyboard
+				end
+				if ~visited(Pprime)
+					visited(Pprime) = true;
+					neighborsPrime = regionQuery(Pprime, D, eps);
+					if length(neighborsPrime) >= minPts
+						neighbors = [neighbors; neighborsPrime];
+						neighbors = unique(neighbors,'stable');
+					end
+				end
+				if clusters(Pprime) == 0
+					clusters(Pprime) = C;
+				end
+				index = index + 1;
+			end
+		end
+	end
+				
+				
+end	
 	
-
-end
 
 function [neighbors] = regionQuery(P, D, eps)
 % regionQuery gets all the neighbors to P in dataset D
@@ -38,12 +60,10 @@ function [neighbors] = regionQuery(P, D, eps)
 	distance = zeros(size(D,1),1);
 	
 	for i = 1 : nDim
-	
-		distance = distance + ((D(:,i) - D(P,:)).^2);
-		
+		distance = distance + ((D(:,i) - D(P,i)).^2);
 	end
 	
 	neighbors = find(distance < eps);
-	
+		
 end
 
