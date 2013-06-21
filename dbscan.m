@@ -26,7 +26,7 @@ function [ clusters ] = dbscan( D, eps, minPts )
 			% Expand Cluster
 			clusters(P) = C;
 			index = 1;
-			while index < length(neighbors)
+			while index <= length(neighbors)
 				try
 				Pprime = neighbors(index);
 				catch
@@ -47,7 +47,8 @@ function [ clusters ] = dbscan( D, eps, minPts )
 			end
 		end
 	end
-				
+	
+	clusters(noise) = 0;
 				
 end	
 	
