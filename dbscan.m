@@ -64,6 +64,8 @@ function [neighbors] = regionQuery(P, D, eps)
 		distance = distance + ((D(:,i) - D(P,i)).^2);
 	end
 	
+	eps = eps^2; %Faster than sqrt of distance
+	
 	neighbors = find(distance < eps);
 		
 end
