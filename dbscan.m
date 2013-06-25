@@ -37,7 +37,7 @@ function [ clusters ] = dbscan( D, eps, minPts )
 					neighborsPrime = regionQuery(Pprime, D, eps);
 					if length(neighborsPrime) >= minPts
 						neighbors = [neighbors; neighborsPrime];
-						neighbors = unique(neighbors,'stable');
+						neighbors = unique_new(neighbors,'stable');
 					end
 				end
 				if clusters(Pprime) == 0
