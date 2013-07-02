@@ -82,7 +82,7 @@ else
     nlhs = nargout;
 end
 
-narginchk(1,4);
+%narginchk(1,4);
 nrhs = nargin;
 if nrhs == 1
     [varargout{1:nlhs}] = uniqueR2012a(varargin{:});
