@@ -8,19 +8,19 @@ function [ groups ] = tree_traversal( tree )
 	
 	marked = false(size(tree,1),size(tree,2));
 	
-	for i = 1 : 9% size(tree,1)
+	for i = 1 : size(tree,1)
 		
 		entries = tree(i,tree(i,:) > 0);
-		
-		if sum(marked(:)) > 0
-			first = tree(i,tree(i,:) > 0 & marked(i,:));
-			first = first(end);
-		else
-			first = entries(1);
-		end
-			
-		if ~isempty(entries)
 
+		if ~isempty(entries)
+		
+			if sum(marked(i,:)) > 0
+				first = tree(i,tree(i,:) > 0 & marked(i,:));
+				first = first(end);
+			else
+				first = entries(1);
+			end
+		
 			for j = 1 : length(entries)
 
 				update = tree == entries(j) & ~marked;

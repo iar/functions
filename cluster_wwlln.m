@@ -43,11 +43,11 @@ function [ storms ] = cluster_wwlln( data )
 			clusterCenter =  clusterHours >= j &...
 							 clusterHours <= j + centerSize;
 
-			cluster = dbscan(E(window,:), eps, minPts);
+			cluster = dbscan(D(window,:), eps, minPts);
 
 
 			clusterOffset = cluster + max(clusters) + 1;
-			clusterOffset(cluster == 0) = 0			
+			clusterOffset(cluster == 0) = 0;			
 
 			clusters(center) = clusterOffset(clusterCenter);
 			tree(window,windowIndex) = clusterOffset;
