@@ -19,6 +19,8 @@ function [ storm, tree ] = cluster_wwlln( data )
 	%% Format data
 		D = [data(:,7),data(:,8), seconds];
 
+		hours = data(:,4) + data(:,5)./60;
+
 	%% Set final storage array
 
 		tree = zeros(size(D,1),50);
