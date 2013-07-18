@@ -22,7 +22,7 @@ function [ storm, tree ] = cluster_wwlln( data )
 	%% Set final storage array
 
 		tree = zeros(size(D,1),50);
-		clusters = zeros(size(E,1),1);
+		clusters = zeros(size(D,1),1);
 			
 	%% Go through each time window
 		
