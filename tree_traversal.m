@@ -1,4 +1,4 @@
-function [ groups ] = tree_traversal( tree )
+function [ cluster ] = tree_traversal( tree )
 %TREE_TRAVERSAL(tree) creates two lists of events per group and groups per event.
 %	The events and groups are traversed to set similar groups together.
 %
@@ -6,69 +6,59 @@ function [ groups ] = tree_traversal( tree )
 
 
 	%% Create group location list
+		
+	graph = false(size(tree,1),max(tree(:)));
 	
-	groupID = unique(tree(:));
-	
-	groupCell = cell(length(groupID) + 1,1);
-	eventCell = cell(size(tree,1),1);
-	
-	for i = 1 : length(eventCell);
+	for i = 1 : size(graph,1);
 		
         entries = tree(i,tree(i,:) > 0);
 		
 		for j = 1 : length(entries)
 			
 			entry = entries(j);
-			oldEntry = groupCell{entry};
-			
-			groupCell{entry} = [oldEntry,i];
+
+			graph(i,entry) = true;
 			
 		end
 		
-		eventCell{i} = entries;
-			
 	end
 	
 	%% New Method
 
-    groups = zeros(size(tree,1),1);
+	marked = false(size(graph,1),size(graph,2));
+	
+	for i = 1 : size(graph,1);
 
-    set = false(size(tree,1),1);
+        groups = find(graph(i,:));
+		marks = marked(i,:);
+		
+		if ~isempty(groups)
 
-	for i = 1 : length(eventCell);
+			if ~any(marks);
+				marks(groups(1)) = true;
+			end
 
-        eventGroups = eventCell{i};
+			for j = 1 : length(groups)
 
-		if ~isempty(eventGroups)
+				check = groups(j);
 
-            if set(i)
-                firstGroup = groups(i);
-            else
-                firstGroup = eventGroups(1);
-            end
+				update = graph(:,check) & ~marked(:,check);
+				marked(update,:) = repmat(marks,sum(update),1);
 
-            for j = 1 : length(eventGroups)
-
-				newGroupMembers = groupCell{eventGroups(j)};
-				
-				for k = 1 : length(newGroupMembers)
-				
-					memberID = newGroupMembers(k);
-					
-					if ~set(memberID)
-						
-						groups(memberID) = firstGroup;
-						set(memberID) = true;
-					
-					end
-					
-				end
-
-            end
-
+			end
+		
 		end
-
-	end	
-
+	end
+	
+	%% Extract final groups
+	
+    cluster = zeros(size(tree,1),1);
+	
+	for i = 1 : size(marked,1)
+		
+		cluster(i) = find(marked(i,:));
+		
+	end
+		
 end
 
