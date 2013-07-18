@@ -4,9 +4,33 @@ function [ groups ] = tree_traversal( tree )
 %
 % Created by: Michael Hutchins
 
+	%% Cut down the size of tree
+	
+	maxWidth = max(sum(tree>0,2));
+	
+	newTree = zeros(size(tree,1),maxWidth);
+	
+	for i = 1 : size(tree,1);
+		
+		entries = tree(i,tree(i,:) > 0);
+	
+		for j = 1 : length(entries)
+			
+			newTree(i,j) = entries(j);
+			
+		end
+		
+	end
+	
+	tree = newTree;
+	
+	%% Initialzie arrays
+
 	groups = zeros(size(tree,1),1);
 	
 	marked = false(size(tree,1),size(tree,2));
+	
+	%% Traverse tree
 	
 	for i = 1 : size(tree,1)
 		
