@@ -9,7 +9,7 @@ function [ groups ] = tree_traversal( tree )
 	
 	groupID = unique(tree(:));
 	
-	groupCell = cell(length(groupID),1);
+	groupCell = cell(length(groupID) + 1,1);
 	eventCell = cell(size(tree,1),1);
 	
 	for i = 1 : length(eventCell);
@@ -39,7 +39,7 @@ function [ groups ] = tree_traversal( tree )
 
         eventGroups = eventCell{i};
 
-        if ~isempty(eventGroups)
+		if ~isempty(eventGroups)
 
             if set(i)
                 firstGroup = groups(i);
