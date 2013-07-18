@@ -1,4 +1,4 @@
-function [ storms ] = cluster_wwlln( data )
+function [ storm, tree ] = cluster_wwlln( data )
 %CLUSTER_WWLLN takes in normally formatted WWLLN data returns a vector of
 %	storm ID numbers for each stroke. Storm 0 strokes are ungrouped.
 
@@ -53,9 +53,7 @@ function [ storms ] = cluster_wwlln( data )
 			tree(window,windowIndex) = clusterOffset;
 			windowIndex = windowIndex + 1;
 		end
-			
-% 		clusterTree = tree_traversal(tree);
-		
+					
 	%% Renumber clusters
 	
 		% Could set to be clusterTree instead
