@@ -23,9 +23,9 @@ function [ groups ] = tree_traversal( tree )
 		for j = 1 : length(entries)
 			
 			entry = [entries(j);0];
-			oldEntry = groupCell{entry};
+			oldEntry = groupCell{entry(1)};
 			
-			groupCell{entry} = [oldEntry,i];
+			groupCell{entry(1)} = [oldEntry,[i;0]];
 			
 		end
 		
@@ -40,40 +40,57 @@ function [ groups ] = tree_traversal( tree )
 
 	for i = 1 : length(eventCell);
 
-        eventGroups = eventCell{i};
+        mainEvent = eventCell{i};
 
-		% Need a way to update eventGroups or something
+		% Need a way to update mainEvent or something
 		% Or remove it or use a sparse matrix
 		
-		if ~isempty(eventGroups)
+		if ~isempty(mainEvent)
 
-            if sum(eventGroups(2,:)) > 0
-				markedGroups = eventGroups(1,eventGroups == 1);
-                firstGroup = markedGroups(end);
-            else
-                firstGroup = eventGroups(1,1);
-            end
+			% Check to see if the stroke has been grouped before
+			if sum(mainEvent(2,:)) > 0
+				% If grouped before select the last group it was placed
+				% into
+				markedGroups = mainEvent(1,mainEvent(2,:) == 1);
+                currentGroup = markedGroups(end);
+			else
+				% If never grouped before pick the first dbscan cluster
+                currentGroup = mainEvent(1,1);
+			end
 
-            for j = 1 : size(eventGroups,2)
+			% Go through each group of mainEvent
+			for j = 1 : size(mainEvent,2)
 
-				newGroupMembers = groupCell{eventGroups(j)};
+				% Get all members of each group
+				groupMembers = groupCell{mainEvent(1,j)};
 				
-				for k = 1 : size(newGroupMembers,2)
+				for k = 1 : size(groupMembers,2)
 				
-					memberID = newGroupMembers(:,k);
+					% Get the stroke number of each group member
+					memberID = groupMembers(:,k);
 					
+					% Only process if it has yet to be grouped
 					if memberID(2) == 0
 						
-						groups(memberID) = firstGroup;
+						% Set the final groups number to the first one
+						if groups(memberID(1)) == 0
+							groups(memberID(1)) = currentGroup;
+						end
 						
-						newGroupMembers(2,k) = 1;
+						% Set the groupMember to be marked
+						groupMembers(2,k) = 1;
 						
+						% Change the eventCell for the member for this
+						% group to the currentGroup and mark it.
+						newEventMembers = eventCell{memberID(1)};
+						newEventMembers(:,newEventMembers(1,:) == mainEvent(1,j)) = [currentGroup;1];
+						eventCell{memberID(1)} = newEventMembers;
 					
 					end
 					
 				end
 				
-				groupCell{eventGroups(j)} = newGroupMembers;
+				groupCell{mainEvent(1,j)} = groupMembers;
 
 			end
 			
