@@ -88,9 +88,11 @@ function [ groups ] = tree_traversal( tree )
 							newEventMembers = unique(newEventMembers','rows')';
 							loc = newEventMembers(1,:) == mainEvent(1,j);
 						end
-						newEventMembers(:,loc) = [currentGroup;1];
-						eventCell{memberID(1)} = newEventMembers;
-					
+						
+						if sum(loc) > 0
+							newEventMembers(:,loc) = [currentGroup;1];
+							eventCell{memberID(1)} = newEventMembers;
+						end
 					end
 					
 				end
