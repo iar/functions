@@ -83,7 +83,12 @@ function [ groups ] = tree_traversal( tree )
 						% Change the eventCell for the member for this
 						% group to the currentGroup and mark it.
 						newEventMembers = eventCell{memberID(1)};
-						newEventMembers(:,newEventMembers(1,:) == mainEvent(1,j)) = [currentGroup;1];
+						loc = newEventMembers(1,:) == mainEvent(1,j);
+						if sum(loc) > 1
+							newEventMembers = unique(newEventMembers','rows')';
+							loc = newEventMembers(1,:) == mainEvent(1,j);
+						end
+						newEventMembers(:,loc) = [currentGroup;1];
 						eventCell{memberID(1)} = newEventMembers;
 					
 					end
