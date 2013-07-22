@@ -1,6 +1,8 @@
 function [ storm, tree ] = cluster_wwlln( data )
 %CLUSTER_WWLLN takes in normally formatted WWLLN data returns a vector of
 %	storm ID numbers for each stroke. Storm 0 strokes are ungrouped.
+%
+%	Created by: Michael Hutchins
 
 	%% clusters Parameters
 
