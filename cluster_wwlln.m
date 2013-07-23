@@ -1,4 +1,4 @@
-function [ storm, tree ] = cluster_wwlln( data )
+function [ storm, tree ] = cluster_wwlln( data, varargin)
 %CLUSTER_WWLLN takes in normally formatted WWLLN data returns a vector of
 %	storm ID numbers for each stroke. Storm 0 strokes are ungrouped.
 %
@@ -11,6 +11,21 @@ function [ storm, tree ] = cluster_wwlln( data )
 		timeScale = 9000;
 		windowSize = 0.5;
 		centerSize = 0.5;
+		
+	%% Check for override parameters
+	
+	for i = 1 : length(varargin)
+	
+		switch varargin{i}
+			case 'eps'
+				eps = varargin{i+1};
+			case 'minPts'
+				minPts = varargin{i+1};
+			case 'timeScale'
+				timeScale = varargin{i+1};
+		end
+		
+	end
 			
 	%% Convert time to distance
 		seconds = datenum(data(:,1:6));
