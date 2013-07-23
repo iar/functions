@@ -29,7 +29,9 @@ function [ groups ] = tree_traversal( tree )
 	groups = zeros(size(tree,1),1);
 	
 	marked = false(size(tree,1),size(tree,2));
-	
+
+	marked(tree == 0) = true;
+	keyboard
 	%% Traverse tree
 	
 	for i = 1 : size(tree,1)
@@ -38,22 +40,15 @@ function [ groups ] = tree_traversal( tree )
 
 		if ~isempty(entries)
 		
-			if sum(marked(i,:)) > 0
+			if sum(marked(i,tree(i,:) > 0)) > 0
 				first = tree(i,tree(i,:) > 0 & marked(i,:));
 				first = first(end);
 			else
 				first = entries(1);
 			end
 		
-			for j = 1 : length(entries)
-
-				update = tree == entries(j) & ~marked;
-
-				tree(update) = first;
-				marked(update) = true;
-
-			end
-
+			[tree, marked] = entry_update(i, tree, marked, first);
+			
 			groups(i) = first;
 		
 		end
@@ -61,4 +56,36 @@ function [ groups ] = tree_traversal( tree )
 	end
 
 end
+
+function [tree, marked] = entry_update(i, tree, marked, first)
+
+	entries = tree(i, tree(i,:) > 0 & ~marked(i,:));
+	
+	if ~isempty(entries)
+		
+		for j = 1 : length(entries)
+		
+			update = tree == entries(j) & ~marked;
+			
+			tree(update) = first;
+			marked(update) = true;
+			
+			newMembers = find(sum(update,2) > 0);
+			
+			for k = 1 : length(newMembers)
+				try
+				if sum(marked(newMembers(k),:) == 0) > 0
+					[tree, marked] = entry_update(newMembers(k), tree, marked, first);
+				end
+				catch
+					keyboard
+				end
+			end
+				
+		end
+		
+	end
+
+end
+
 
