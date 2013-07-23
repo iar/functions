@@ -18,19 +18,23 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 	
 	for i = 1 : length(varargin)
 	
-		switch varargin{i}
-			case 'eps'
-				eps = varargin{i+1};
-			case 'minPts'
-				minPts = varargin{i+1};
-			case 'timeScale'
-				timeScale = varargin{i+1};
-			case 'buffer'
-				% Logical index of where padded/buffer strokes are located
-				%	so the windowing can overlap into previous/future days
-				bufferLoc = varargin{i+1};
-		end
+		input = varargin{i};
 		
+		if ischar(input)
+
+			switch varargin{i}
+				case 'eps'
+					eps = varargin{i+1};
+				case 'minPts'
+					minPts = varargin{i+1};
+				case 'timeScale'
+					timeScale = varargin{i+1};
+				case 'buffer'
+					% Logical index of where padded/buffer strokes are located
+					%	so the windowing can overlap into previous/future days
+					bufferLoc = varargin{i+1};
+			end
+		end
 	end
 			
 	%% Convert time to distance
