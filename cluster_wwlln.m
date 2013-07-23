@@ -14,6 +14,8 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 		
 	%% Check for override parameters
 	
+	bufferLoc = false(size(data,1),1);
+	
 	for i = 1 : length(varargin)
 	
 		switch varargin{i}
@@ -23,6 +25,10 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 				minPts = varargin{i+1};
 			case 'timeScale'
 				timeScale = varargin{i+1};
+			case 'buffer'
+				% Logical index of where padded/buffer strokes are located
+				%	so the windowing can overlap into previous/future days
+				bufferLoc = varargin{i+1};
 		end
 		
 	end
@@ -47,14 +53,15 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 		
 		windowIndex = 1;
 	
-		for j = 0 : windowSize : 24
+		for j = 0 : windowSize : 24 - centerSize
 
 
 			window = hours >= j - windowSize &...
 					 hours <= j + centerSize + windowSize;
 
 			center = hours >= j &...
-					 hours <= j + centerSize;
+					 hours <= j + centerSize &...
+					 ~bufferLoc;
 
 
 			clusterHours = hours(window);
