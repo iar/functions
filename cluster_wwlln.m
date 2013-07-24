@@ -69,7 +69,7 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 			cluster = dbscan(D(window,:), eps, minPts);
 
 
-			clusterOffset = cluster + max(clusters) + 1;
+			clusterOffset = cluster + max(tree(:)) + 1;
 			clusterOffset(cluster == 0) = 0;			
 
 			clusters(center) = clusterOffset(clusterCenter);
