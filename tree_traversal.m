@@ -56,6 +56,7 @@ function [ groups ] = tree_traversal( tree )
 		end
 		
 	end
+	
 
 end
 
