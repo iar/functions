@@ -76,10 +76,13 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 			tree(window,windowIndex) = clusterOffset;
 			windowIndex = windowIndex + 1;
 		end
-					
+	
+	%% Traverse tree and combine each window results
+	
+		clusters = tree_traversal(tree);
+		
 	%% Renumber clusters
 	
-		% Could set to be clusterTree instead
 		cluster = clusters(:);
 
 		storm = zeros(length(cluster),1);
