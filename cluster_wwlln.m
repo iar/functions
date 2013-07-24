@@ -7,7 +7,7 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 	%% clusters Parameters
 
 		eps = .12;
-		minPts = 3;
+		minPts = 2;
 		timeScale = 9000;
 		windowSize = 0.5;
 		centerSize = 0.5;
