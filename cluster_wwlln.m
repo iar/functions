@@ -79,7 +79,7 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 	
 	%% Traverse tree and combine each window results
 	
-		clusters = tree_traversal(tree);
+%		clusters = tree_traversal(tree);
 		
 	%% Renumber clusters
 	
