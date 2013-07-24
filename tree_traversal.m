@@ -49,7 +49,7 @@ function [ groups ] = tree_traversal( tree )
 				nextStrokes = false(size(groups,1),1);
 				nextStrokes(i : end) = true;
 				
-				groups(update & nextStrokes) = first;
+				groups(update & groups == 0) = first;
 				
 			end
 			
