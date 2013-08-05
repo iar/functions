@@ -18,7 +18,15 @@ confidence = double(flash{14}');
 % UTC is behind TAI by 34 seconds in 2011, 35 seconds after 2012/6/30
 % UTC is behind TAI93 by 7 seconds in 2011, 8 seconds after 2012/6/30
 
-TAI_UTC = 7;
+% Check for UTC-TAI93 Difference
+
+checkDate = (time ./86400) + datenum([1993,1,1]);
+
+if mode(floor(checkDate)) >= datenum([2012,06,30])
+	TAI_UTC = 8;
+else
+	TAI_UTC = 7;
+end
 
 time = (time - TAI_UTC) ./ 86400;
 
