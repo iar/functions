@@ -23,7 +23,7 @@ confidence = double(flash{14}');
 checkDate = (time ./86400) + datenum([1993,1,1]);
 
 if mode(floor(checkDate)) >= datenum([2012,06,30])
-	TAI_UTC = 6;
+	TAI_UTC = 8;
 else
 	TAI_UTC = 7;
 end
