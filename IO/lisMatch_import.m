@@ -1,4 +1,4 @@
-function [flashMatch, missedStrokes, matchStrokes] = lisMatch_import(date)
+function [flashMatch, missedStrokes, matchStrokes, groupMatch] = lisMatch_import(date, hash)
 %Imports a LIS data file:
 %   YYYY,MM,DD,hh,mm,ss,lat,long,evnts,confidence,irradiance,area,duration
 %
@@ -8,12 +8,14 @@ function [flashMatch, missedStrokes, matchStrokes] = lisMatch_import(date)
 
 	subdirectory = 'lisMatch/';
 	prefix = 'lisMatchENTLN';
+	suffix = sprintf('_%s',hash);
 
 %% Initialize output
 
 	flashMatch = NaN;
 	missedStrokes = NaN;
 	matchStrokes = NaN;
+	groupMatch = NaN;
 
 	%% Check for date specified file
 	if strncmp(class(date),'double',6)
@@ -27,7 +29,7 @@ function [flashMatch, missedStrokes, matchStrokes] = lisMatch_import(date)
 		end
 
 		% Generate filename
-		fileName=sprintf('%s%04g%02g%02g.mat',prefix,date(1:3)); 
+		fileName=sprintf('%s%04g%02g%02g%s.mat',prefix,date(1:3),suffix); 
 
 		% Load dataPath.dat file
 		dataPath = textread('dataPath.dat','%s\n');
