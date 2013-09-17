@@ -1,4 +1,4 @@
-function [ flashes, viewtime, group ] = lis_hdf_read( filename )
+function [ flashes, viewtime, groups ] = lis_hdf_read( filename )
 %LIS_HDF_READ imports LIS hdf files and extracts flash data
 %
 %   Written By:  Michael Hutchins
@@ -37,15 +37,15 @@ function [ flashes, viewtime, group ] = lis_hdf_read( filename )
 
 	%% Groups
 	
-	group = hdfread(filename,'group');
+	groups = hdfread(filename,'group');
 	
-	time = double(group{1}');
-	location = double(group{3}');
-	radiance = double(group{4}');
+	time = double(groups{1}');
+	location = double(groups{3}');
+	radiance = double(groups{4}');
 	
 	date = TAI93ToUTC(time);
 	
-	group = [datevec(date),location,radiance];
+	groups = [datevec(date),location,radiance];
 	
 	
 end

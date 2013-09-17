@@ -1,4 +1,4 @@
-function [flashes, viewtime] = lis_import(date)
+function [flashes, viewtime, groups] = lis_import(date)
 %Imports a LIS data file:
 %   YYYY,MM,DD,hh,mm,ss,lat,long,evnts,confidence,irradiance,area,duration
 %
