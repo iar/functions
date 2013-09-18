@@ -3,34 +3,114 @@ function [data,waveform] = s_import(filename)
 %
 %   Written By:  Michael Hutchins
 
-fid=fopen(filename);
-s=fgets(fid);
-fend=feof(fid);
-index=1;
-data=zeros(1000,13);
+%% Filepaths
 
-A = sscanf(s,'%d %d %d %d %d %f %f %f %f %d %f %g');
-rate=A(13);
-waveform=zeros(1000,rate);
+	subdirectory = 'Sfiles';
+	prefix = 'S';
+	suffix = '';
 
-while(fend==0),
-    if index>1;
-        s=fgets(fid);
-    end
-    A = sscanf(s,'%d %d %d %d %d %f %f %f %f %d %f %g');
-    s=fgets(fid);
-    B = sscanf(s,repmat('%d ',1,rate));
-    data(index,:)=A;
-    waveform(index,:)=B;
-    
-    index=index+1;
-    fend=feof(fid);
+%% Initialize variables
+
+	import = false;
+
+%% Check for date specified file
+
+	if strncmp(class(date),'double',6)
+
+		% Format date into datevec format
+		if length(date) == 1;
+			date=datevec(date);
+			date=date(1:3);
+		elseif length(date) == 6
+			date = date(1:3);
+		elseif length(date)~=3
+			warning('Unknown Input Format');
+		end
+
+		% Generate filename
+		fileName=sprintf('%s%04g%02g%02g%s',prefix,date(1:3),suffix); 
+		
+		% Load dataPath.dat file
+		fid = fopen('dataPath.dat');
+		dataPath = textscan(fid,'%s','Delimiter','\n');
+		dataPath = dataPath{1};
+		
+		% Check each path for the file
+		for i = 1 : size(dataPath,1);
+			
+			% Generate load name to check
+			path = dataPath{i};
+			fileLoad = sprintf('%s%s/%s.mat',path,subdirectory,fileName);
+			fileImport = sprintf('%s%s/%s.loc',path,subdirectory,fileName);
+
+			% If found break out of the loop
+			if exist(fileLoad,'file') == 2
+				filename = fileLoad;
+				break;
+			end
+			
+			% If found break out of the loop and set gz to true
+			if exist(fileImport,'file') == 2
+				filename = fileImport;
+				import = true;
+				break;
+			end			
+			% If loop ends without finding give error
+			if i == size(dataPath,1)
+				error(sprintf('File %s not found!',fileName));
+			end
+		end
+
+	% Check for filename specified file
+	elseif strmatch(class(date),'char')
+		filename = date;
+		
+	% Error out if not found
+	else
+		error('Unrecognized filename.')
+	end
+
+%% Read/Load data
+	
+	if import
+		
+		fid=fopen(filename);
+		s=fgets(fid);
+		fend=feof(fid);
+		index=1;
+		data=zeros(1000,13);
+
+		A = sscanf(s,'%d %d %d %d %d %f %f %f %f %d %f %g');
+		rate=A(13);
+		waveform=zeros(1000,rate);
+
+		while(fend==0),
+			if index>1;
+				s=fgets(fid);
+			end
+			A = sscanf(s,'%d %d %d %d %d %f %f %f %f %d %f %g');
+			s=fgets(fid);
+			B = sscanf(s,repmat('%d ',1,rate));
+			data(index,:)=A;
+			waveform(index,:)=B;
+
+			index=index+1;
+			fend=feof(fid);
+
+		end
+
+		data=data(1:index-1,:);
+		waveform=waveform(1:index-1,:);
+
+		fclose(fid);
+		
+	else
+		
+		load(filename)
+
+	end
 
 end
 
-data=data(1:index-1,:);
-waveform=waveform(1:index-1,:);
-
-fclose all;
 
 end

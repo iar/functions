@@ -3,70 +3,92 @@ function [data] = ae_import(date)
 %
 %   Written By:  Michael Hutchins
 
-index=1;
-dataPath = textread('dataPath.dat','%s\n');
-path = '';
-pathAlt = '';
-for i = 1 : size(dataPath,1);
-    if index == 1 && exist(dataPath{i},'dir')
-        path = dataPath{i};
-        index = index + 1;
-    elseif index ==2 && exist(dataPath{i},'dir')
-        pathAlt = dataPath{i};
-    end
-end
 
-ae_path = sprintf('%sAEfiles/',path);
-ae_path_alt = sprintf('%sAEfiles/',pathAlt);
+%% Filepaths
 
-import = true;
+	subdirectory = 'AEfiles';
+	prefix = 'AE';
+	suffix = '';
 
-if strmatch(class(date),'double')
-    if length(date)==1;
-        date=datevec(date);
-        date=date(1:3);
-    elseif length(date)~=3
-        warning('Unknown Input Format');
-    end
-    
-    fileload=sprintf('%sAE%04g%02g%02g.mat',ae_path,date(1:3));
-    fileimport=sprintf('%sAE%04g%02g%02g.loc',ae_path,date(1:3));
- 
-    fileloadAlt=sprintf('%sAE%04g%02g%02g.mat',ae_path_alt,date(1:3));
-    fileimportAlt=sprintf('%sAE%04g%02g%02g.loc',ae_path_alt,date(1:3));
-    
-    if exist(fileload,'file');
-       load(fileload)
-       import=false;
-    elseif exist(fileloadAlt,'file')
-        load(fileloadAlt);
-        import=false;
-    elseif exist(fileimport,'file');
-       fid=fopen(fileimport);
-       import=true;
-    elseif exist(fileimportAlt,'file');
-        fid=fopen(fileloadAlt);
-        import=true;
-    else
-        error('File Not Found!')
-    end
-    
-    
-elseif strmatch(class(date),'char')
-    fid=fopen(date);
-    import=true;
-else
-    error('Unrecognized filename.')
-end
+%% Initialize variables
 
-if import
+	import = false;
 
-    data=fscanf(fid,'%d/%d/%d,%d:%d:%f,%f,%f,%f,%d,%g,%g,%g',[13,Inf]);
+%% Check for date specified file
 
-    data=data';
+	if strncmp(class(date),'double',6)
 
-    fclose(fid);
+		% Format date into datevec format
+		if length(date) == 1;
+			date=datevec(date);
+			date=date(1:3);
+		elseif length(date) == 6
+			date = date(1:3);
+		elseif length(date)~=3
+			warning('Unknown Input Format');
+		end
 
-end
+		% Generate filename
+		fileName=sprintf('%s%04g%02g%02g%s',prefix,date(1:3),suffix); 
+		
+		% Load dataPath.dat file
+		fid = fopen('dataPath.dat');
+		dataPath = textscan(fid,'%s','Delimiter','\n');
+		dataPath = dataPath{1};
+		
+		% Check each path for the file
+		for i = 1 : size(dataPath,1);
+			
+			% Generate load name to check
+			path = dataPath{i};
+			fileLoad = sprintf('%s%s/%s.mat',path,subdirectory,fileName);
+			fileImport = sprintf('%s%s/%s.loc',path,subdirectory,fileName);
 
+			% If found break out of the loop
+			if exist(fileLoad,'file') == 2
+				filename = fileLoad;
+				break;
+			end
+			
+			% If found break out of the loop and set gz to true
+			if exist(fileImport,'file') == 2
+				filename = fileImport;
+				import = true;
+				break;
+			end			
+			% If loop ends without finding give error
+			if i == size(dataPath,1)
+				error(sprintf('File %s not found!',fileName));
+			end
+		end
+
+	% Check for filename specified file
+	elseif strmatch(class(date),'char')
+		filename = date;
+		
+	% Error out if not found
+	else
+		error('Unrecognized filename.')
+	end
+
+%% Read/Load data
+	
+	if import
+
+		fid = fopen(filename);
+		
+		data=fscanf(fid,'%d/%d/%d,%d:%d:%f,%f,%f,%f,%d,%g,%g,%g',[13,Inf]);
+
+		data=data';
+
+		fclose(fid);
+		
+		fclose(fid);
+		
+	else
+		
+		load(filename)
+
+	end
+	
 end

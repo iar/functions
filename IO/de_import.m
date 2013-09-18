@@ -3,52 +3,70 @@ function [de_map,de_map_high,de_time] = de_import(date)
 %
 %   Written By:  Michael Hutchins
 
-index=1;
-dataPath = textread('dataPath.dat','%s\n');
-path = '';
-pathAlt = '';
-for i = 1 : size(dataPath,1);
-    if index == 1 && exist(dataPath{i},'dir')
-        path = dataPath{i};
-        index = index + 1;
-    elseif index ==2 && exist(dataPath{i},'dir')
-        pathAlt = dataPath{i};
-    end
-end
+%% Filepaths
 
+	subdirectory = 'DEfiles';
+	prefix = 'DE';
+	suffix = '';
 
-de_path = sprintf('%sdeMaps/',path);
-de_path_alt = sprintf('%sdeMaps/',pathAlt);
+%% Initialize variables
 
+	de_map = NaN;
+	de_map_high = NaN;
+	de_time = NaN;
+	
+%% Check for date specified file
 
+	if strncmp(class(date),'double',6)
 
-if strmatch(class(date),'double')
-    
-    if length(date)==1;
-        date=datevec(date);
-        date=date(1:3);
-    elseif length(date)~=3
-        warning('Unknown Input Format');
-    end
-    
-    
-    fileLoad=sprintf('%sDE%04g%02g%02g.mat',de_path,date(1:3)); 
-    fileLoadAlt=sprintf('%sDE%04g%02g%02g.mat',de_path_alt,date(1:3));
-    
-    if exist(fileLoad,'file');
-       filename = fileLoad;
-    elseif exist(fileLoadAlt,'file')
-       filename = fileLoadAlt;
-    else
-        error('File Not Found!')
-    end
-    
-elseif strmatch(class(date),'char')
-    filename=date;
-else
-    error('Unrecognized filename.')
-end
+		% Format date into datevec format
+		if length(date) == 1;
+			date=datevec(date);
+			date=date(1:3);
+		elseif length(date) == 6
+			date = date(1:3);
+		elseif length(date)~=3
+			warning('Unknown Input Format');
+		end
 
-load(filename);
+		% Generate filename
+		fileName=sprintf('%s%04g%02g%02g%s',prefix,date(1:3),suffix); 
+		
+		% Load dataPath.dat file
+		fid = fopen('dataPath.dat');
+		dataPath = textscan(fid,'%s','Delimiter','\n');
+		dataPath = dataPath{1};
+		
+		% Check each path for the file
+		for i = 1 : size(dataPath,1);
+			
+			% Generate load name to check
+			path = dataPath{i};
+			fileLoad = sprintf('%s%s/%s.mat',path,subdirectory,fileName);
 
+			% If found break out of the loop
+			if exist(fileLoad,'file') == 2
+				filename = fileLoad;
+				break;
+			end
+			
+			% If loop ends without finding give error
+			if i == size(dataPath,1)
+				error(sprintf('File %s not found!',fileName));
+			end
+		end
+
+	% Check for filename specified file
+	elseif strmatch(class(date),'char')
+		filename = date;
+		
+	% Error out if not found
+	else
+		error('Unrecognized filename.')
+	end
+
+%% Read/Load data
+	
+	load(filename);
+	
 end

@@ -5,124 +5,137 @@ function [data] = entln_import(date)
 %
 %   Written By:  Michael Hutchins
 
-import=true;
+%% Filepaths
 
-index=1;
-dataPath = textread('dataPath.dat','%s\n');
-path = '';
-pathAlt = '';
-for i = 1 : size(dataPath,1);
-    if index == 1 && exist(dataPath{i},'dir')
-        path = dataPath{i};
-        index = index + 1;
-    elseif index ==2 && exist(dataPath{i},'dir')
-        pathAlt = dataPath{i};
-    end
-end
+	subdirectory = 'ENfiles';
+	prefix = 'EN';
+	suffix = '';
 
+%% Initialize variables
 
-en_path = sprintf('%sENfiles/',path);
-en_path_alt = sprintf('%sENfiles/',pathAlt);
+	import = false;
 
-if strmatch(class(date),'double')
-    if length(date)==1;
-        date=datevec(date);
-        date=date(1:3);
-    elseif length(date)~=3
-        warning('Unknown Input Format');
-    end
-    
-    fileload=sprintf('%sEN%04g%02g%02g.mat',en_path,date(1:3));
-    fileimport=sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path,date(1:3));
+%% Check for date specified file
 
-    fileloadAlt=sprintf('%sEN%04g%02g%02g.mat',en_path_alt,date(1:3));
-    fileimportAlt=sprintf('%sLtgFlashPortions%04g%02g%02g.csv',en_path_alt,date(1:3));
-    
-    if exist(fileload,'file');
-       load(fileload)
-       import=false;
-    elseif exist(fileloadAlt,'file')
-        load(fileloadAlt);
-        import=false;
-    elseif exist(fileimport,'file');
-       fid=fopen(fileimport);
-       import=true;
-    elseif exist(fileimportAlt,'file');
-        fid=fopen(fileloadAlt);
-        import=true;
-    else
-        error('File Not Found!')
-    end
-    
-    
-elseif strmatch(class(date),'char')
-    fid=fopen(date);
-    import=true;
-else
-    error('Unrecognized filename.')
-end
+	if strncmp(class(date),'double',6)
 
-%%
-
-if import
-    
-    s=fgets(fid);
-    fend=feof(fid);
-    index=1;
-    data=zeros(20000000,13);
-
-    while(fend==0),
-        s=fgets(fid);
-%         A = sscanf(s(89:end),'%g-%g-%g %g:%g:%f,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
-        A = sscanf(s(85:end),'%g/%g/%g %g:%g:%f %2c,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
-        if isempty(A) || length(A)~=11
-            a=strfind(s,',');
-            A = sscanf(s(a(3)+1:end),'%g/%g/%g %g:%g:%f %2c,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
-        end
-
-        B = textscan(s,'%s%s','Delimiter',',,');
-        B1 = B{1};
-        B2 = B{2};
-        B1 = B1{end-1};
-        B2 = B2{end-1};
-        if length(B1) < length(B2) && length(B1)>=1
-            B = B1;
-            Balt = B2;
-        else
-            B = B2;
-            Balt = B1;
-        end
-        B = sscanf(B,'%g');
-        if isempty(B)
-            B = sscanf(Balt,'%g');
-        end
-        
-        
-        D=strfind(s,',,');
-        E=strfind(s,'=');
-        
-        if length(D)>1
-            nstn=length(E);
-        else
-            nstn=length(E)-2;
-        end
-       
-		try 
-        	data(index,:)=[A(9:19)',B,nstn];
-       	catch
-			data(index,:)=[A(3:13)',B,nstn];
+		% Format date into datevec format
+		if length(date) == 1;
+			date=datevec(date);
+			date=date(1:3);
+		elseif length(date) == 6
+			date = date(1:3);
+		elseif length(date)~=3
+			warning('Unknown Input Format');
 		end
 
-		index=index+1;
-        fend=feof(fid);
-    end
+		% Generate filename
+		fileName=sprintf('%s%04g%02g%02g%s',prefix,date(1:3),suffix); 
+		
+		% Load dataPath.dat file
+		fid = fopen('dataPath.dat');
+		dataPath = textscan(fid,'%s','Delimiter','\n');
+		dataPath = dataPath{1};
+		
+		% Check each path for the file
+		for i = 1 : size(dataPath,1);
+			
+			% Generate load name to check
+			path = dataPath{i};
+			fileLoad = sprintf('%s%s/%s.mat',path,subdirectory,fileName);
+			fileImport = sprintf('%s%s/%s.loc',path,subdirectory,fileName);
 
-    data=data(1:index-1,:);
+			% If found break out of the loop
+			if exist(fileLoad,'file') == 2
+				filename = fileLoad;
+				break;
+			end
+			
+			% If found break out of the loop and set gz to true
+			if exist(fileImport,'file') == 2
+				filename = fileImport;
+				import = true;
+				break;
+			end			
+			% If loop ends without finding give error
+			if i == size(dataPath,1)
+				error(sprintf('File %s not found!',fileName));
+			end
+		end
 
-    fclose all;
+	% Check for filename specified file
+	elseif strmatch(class(date),'char')
+		filename = date;
+		
+	% Error out if not found
+	else
+		error('Unrecognized filename.')
+	end
 
-end
+%% Read/Load data
+	
+	if import
+		
+		fid = fopen(filename);
+		s=fgets(fid);
+		fend=feof(fid);
+		index=1;
+		data=zeros(20000000,13);
 
-%%
+		while(fend==0),
+			s=fgets(fid);
+			A = sscanf(s(85:end),'%g/%g/%g %g:%g:%f %2c,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
+			if isempty(A) || length(A)~=11
+				a=strfind(s,',');
+				A = sscanf(s(a(3)+1:end),'%g/%g/%g %g:%g:%f %2c,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
+			end
+
+			B = textscan(s,'%s%s','Delimiter',',,');
+			B1 = B{1};
+			B2 = B{2};
+			B1 = B1{end-1};
+			B2 = B2{end-1};
+			if length(B1) < length(B2) && length(B1)>=1
+				B = B1;
+				Balt = B2;
+			else
+				B = B2;
+				Balt = B1;
+			end
+			B = sscanf(B,'%g');
+			if isempty(B)
+				B = sscanf(Balt,'%g');
+			end
+
+
+			D=strfind(s,',,');
+			E=strfind(s,'=');
+
+			if length(D)>1
+				nstn=length(E);
+			else
+				nstn=length(E)-2;
+			end
+
+			try 
+				data(index,:)=[A(9:19)',B,nstn];
+			catch
+				data(index,:)=[A(3:13)',B,nstn];
+			end
+
+			index=index+1;
+			fend=feof(fid);
+		end
+
+		data=data(1:index-1,:);
+
+		fclose(fid);
+
+		
+	else
+		
+		load(filename)
+
+	end
 
 end

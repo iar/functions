@@ -4,85 +4,93 @@ function [data] = a_import(date)
 %
 %   Written By:  Michael Hutchins
 
-dataPath = textread('dataPath.dat','%s\n');
-index = 1;
+%% Filepaths
 
-path = '';
-pathAlt = '';
-for i = 1 : size(dataPath,1);
-    if index == 1 && exist(dataPath{i},'dir')
-        path = dataPath{i};
-        index = index + 1;
-    elseif index ==2 && exist(dataPath{i},'dir')
-        pathAlt = dataPath{i};
-    end
-end
+	subdirectory = 'Afiles';
+	prefix = 'A';
+	suffix = '.loc';
 
-a_path = sprintf('%sAfiles/',path);
-a_path_alt = sprintf('%sAfiles/',pathAlt);
+%% Initialize variables
 
-gz=false;
+	gz = false;
 
-if strmatch(class(date),'double')
-    
-    if length(date)==1;
-        date=datevec(date);
-        date=date(1:3);
-    elseif length(date)~=3
-        warning('Unknown Input Format');
-    end
-    
-    fileImport=sprintf('%sA%04g%02g%02g.loc',a_path,date(1:3));
-    fileGzip=sprintf('%sA%04g%02g%02g.loc.gz',a_path,date(1:3));
- 
-    fileImportAlt=sprintf('%sA%04g%02g%02g.loc',a_path_alt,date(1:3));
-    fileGzipAlt=sprintf('%sA%04g%02g%02g.loc.gz',a_path_alt,date(1:3));
-    
-    if exist(fileImport,'file');
-       gFile = fileImport;
-       fid = fopen(fileImport);
-       gz = true;
-        
-    elseif exist(fileImportAlt,'file')
-       gFile = fileImportAlt;
-       fid = fopen(fileImportAlt);
-       gz = true;
-       
-    elseif exist(fileGzip,'file');
-       gFile = fileGzip;
-       system(sprintf('gunzip %s',gFile));
-       gFile = gFile(1:end-3);
-       fid=fopen(fileGzip(1:end-3));
-       gz = true;
-       
-    elseif exist(fileGzipAlt,'file');
-       gFile = fileGzipAlt;
-       system(sprintf('gunzip %s',gFile));
-       gFile = gFile(1:end-3);
-       fid=fopen(fileGzipAlt(1:end-3));
-       gz = true;
-    else
-        error('File Not Found!')
+%% Check for date specified file
 
-    end
-    
+	if strncmp(class(date),'double',6)
 
-elseif strmatch(class(date),'char')
-    fid=fopen(date);
-else
-    error('Unrecognized filename.')
-end
+		% Format date into datevec format
+		if length(date) == 1;
+			date=datevec(date);
+			date=date(1:3);
+		elseif length(date) == 6
+			date = date(1:3);
+		elseif length(date)~=3
+			warning('Unknown Input Format');
+		end
 
-data=fscanf(fid,'%d/%d/%d,%d:%d:%f,%f,%f,%f,%d',[10,Inf]);
+		% Generate filename
+		fileName=sprintf('%s%04g%02g%02g%s',prefix,date(1:3),suffix); 
+		
+		% Load dataPath.dat file
+		fid = fopen('dataPath.dat');
+		dataPath = textscan(fid,'%s','Delimiter','\n');
+		dataPath = dataPath{1};
+		
+		% Check each path for the file
+		for i = 1 : size(dataPath,1);
+			
+			% Generate load name to check
+			path = dataPath{i};
+			fileLoad = sprintf('%s%s/%s',path,subdirectory,fileName);
+			fileLoadGZ = sprintf('%s%s/%s.gz',path,subdirectory,fileName);
 
-data=data';
+			% If found break out of the loop
+			if exist(fileLoad,'file') == 2
+				filename = fileLoad;
+				break;
+			end
+			
+			% If found break out of the loop and set gz to true
+			if exist(fileLoadGZ,'file') == 2
+				system(sprintf('gunzip %s',fileLoadGZ));
+				filename = fileLoad;
+				gz = true;
+				break;
+			end			
+			% If loop ends without finding give error
+			if i == size(dataPath,1)
+				error(sprintf('File %s not found!',fileName));
+			end
+		end
 
-if gz
+	% Check for filename specified file
+	elseif strmatch(class(date),'char')
+		filename = date;
+		
+	% Error out if not found
+	else
+		error('Unrecognized filename.')
+	end
 
-system(sprintf('gzip %s',gFile));
 
-end
+%% Read in data
+	
+	fid = fopen('filename');
+	
+	data=fscanf(fid,'%d/%d/%d,%d:%d:%f,%f,%f,%f,%d',[10,Inf]);
 
-fclose all;
+	data=data';
+
+%% Repack if needed
+
+	if gz
+
+		system(sprintf('gzip %s',filename));
+
+	end
+	
+%% Close files	
+
+	fclose(fid);
 
 end
