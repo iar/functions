@@ -1,4 +1,4 @@
-function [flashMatch, missedStrokes, matchStrokes, groupMatch] = lisMatch_import(date, hash)
+function [flashMatch, missedStrokes, matchStrokes, groupMatch, groupMatched, groupMissed] = lisMatch_import(date, hash)
 %Imports a LIS data file:
 %   YYYY,MM,DD,hh,mm,ss,lat,long,evnts,confidence,irradiance,area,duration
 %
@@ -15,8 +15,10 @@ function [flashMatch, missedStrokes, matchStrokes, groupMatch] = lisMatch_import
 	flashMatch = NaN;
 	missedStrokes = NaN;
 	matchStrokes = NaN;
+	groupMatched = NaN;
+	groupMissed = NaN;
 	groupMatch = NaN;
-
+	
 	%% Check for date specified file
 	if strncmp(class(date),'double',6)
 
