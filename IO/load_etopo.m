@@ -5,8 +5,10 @@ function [ z ] = load_etopo
 
 	%% Find ETOPO Data
 
-	dataPath = textread('dataPath.dat','%s\n');
-
+		fid = fopen('dataPath.dat');
+		dataPath = textscan(fid,'%s','Delimiter','\n');
+		dataPath = dataPath{1};
+		
 	for i = 1 : size(dataPath,1);
 		if exist(sprintf('%sETOPO5.DAT',dataPath{i}),'file')
 			etopoPath = dataPath{i};
