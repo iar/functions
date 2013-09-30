@@ -51,7 +51,7 @@ function [data] = entln_import(date)
 				break;
 			end
 			
-			% If found break out of the loop and set gz to true
+			% If found break out of the loop and set import to true
 			if exist(fileImport,'file') == 2
 				filename = fileImport;
 				import = true;
