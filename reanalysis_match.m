@@ -14,15 +14,19 @@ function [ weather ] = reanalysis_match( lat, long, date )
 	if size(date,2) == 1;
 		date = datevec(date);
 		hour = date(:,4);
-		date = median(date(:,1:3));
+		date = date(:,1:3);
 	elseif size(date,2) == 6
 		hour = date(:,4);
-		date = median(date(:,1:3));
+		date = date(:,1:3);
 	elseif size(date,2) == 3
-		date = median(date(:,1:3));
+		date = date(:,1:3);
 		hour = zeros(size(date,1),1);
 	else
 		warning('Unknown Input Format');
+	end
+	
+	if size(date,1) > 1
+		date = median(date(:,1:3));
 	end
 
 %% Format Lat/Long
