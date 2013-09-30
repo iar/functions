@@ -139,6 +139,8 @@ function [ air, shum, level, grid ] = narr_import( date )
 				time = timeTotal(timeTotal == dates(i));
 				save(saveName,variables{:});
 			end
+	else
+		load(filename);
         
     end
     
