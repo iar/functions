@@ -31,7 +31,11 @@ function [ match ] = location_match( lat, long, latTable, longTable )
                 location = [I,J]; 
             else
                 tolerance = 2 * tolerance;
-            end
+			end
+			
+			if tolerance > 5
+				location = [NaN,NaN];
+			end
 
         end
 
