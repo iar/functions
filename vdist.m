@@ -67,6 +67,7 @@ function varargout = vdist(lat1,lon1,lat2,lon2)
 
 %		Altered by: Michael Hutchins
 %			Removed warnings
+%			Reshaped inputs
 
 % reshape inputs
 keepsize = size(lat1);
