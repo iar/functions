@@ -1,104 +1,144 @@
-function [ air, shum, level, grid ] = narr_import( date, narrPath )
+function [ air, shum, level, grid ] = narr_import( date )
 %NARR_LOAD Loads NARR Reanalysis date, downloads if not available locally
 %   Read in netCDF date from Reanalysis
 %   Using NARR Reanalysis 3-hour date: http://www.esrl.noaa.gov/psd/date/gridded/date.narr.html
 %   ftp://ftp.cdc.noaa.gov/datesets/NARR/pressure/
- %
+%
 %   Written By:  Michael Hutchins
+ 
 
-    switch nargin
-        case 1
-            index=1;
-            dataPath = textread('dataPath.dat','%s\n');
-            path = '';
-            pathAlt = '';
-            for i = 1 : size(dataPath,1);
-                if index == 1 && exist(dataPath{i},'dir')
-                    path = dataPath{i};
-                    index = index + 1;
-                elseif index ==2 && exist(dataPath{i},'dir')
-                    pathAlt = dataPath{i};
-                end
-            end
-            narrPath = sprintf('%sNARRfiles/',path);
-    end
+%% Filepaths
+
+	subdirectory = 'NARRfiles';
+	prefix = 'NARR';
+	suffix = '';
+
+%% Initialize variables
+
+	import = false;
+
+%% Check for date specified file
+
+	if strncmp(class(date),'double',6)
+
+		% Format date into datevec format
+		if length(date) == 1;
+			date=datevec(date);
+			date=date(1:3);
+		elseif length(date) == 6
+			date = date(1:3);
+		elseif length(date)~=3
+			warning('Unknown Input Format');
+		end
+
+		% Generate filename
+		fileName=sprintf('%s%04g%02g%02g%s',prefix,date(1:3),suffix); 
+		
+		% Load dataPath.dat file
+		fid = fopen('dataPath.dat');
+		dataPath = textscan(fid,'%s','Delimiter','\n');
+		dataPath = dataPath{1};
+		
+		% Check each path for the file
+		for i = 1 : size(dataPath,1);
+			
+			% Generate load name to check
+			path = dataPath{i};
+			fileLoad = sprintf('%s%s/%s.mat',path,subdirectory,fileName);
+			fileImport = sprintf('%s%s/%s.loc',path,subdirectory,fileName);
+
+			% If found break out of the loop
+			if exist(fileLoad,'file') == 2
+				filename = fileLoad;
+				break;
+			end
+			
+			% If found break out of the loop and set import to true
+			if exist(fileImport,'file') == 2
+				filename = fileImport;
+				import = true;
+				break;
+			end			
+			% If loop ends without finding give error
+			if i == size(dataPath,1)
+				error(sprintf('File %s not found!',fileName));
+			end
+		end
+
+	% Check for filename specified file
+	elseif strmatch(class(date),'char')
+		filename = date;
+		
+	% Error out if not found
+	else
+		error('Unrecognized filename.')
+	end
+
+
+
+%% Read/Load data
+	
+	if import
     
-    if length(date) == 1
-        date = datevec(date);
-        date = date(1:3);
-    elseif length(date) == 6
-        date = date(1:3);
-    end
+    	%% Set raw filenames
 
-    %% Check for prelaoded .mat files, otherwise download and import
+			% Air Temperature @ Pressure Levels
+			airName = sprintf('%sair.%04g%02g.nc',narrPath,date(1:2));
+			% Specific Humidity @ Pressure Levels
+			shumName = sprintf('%sshum.%04g%02g.nc',narrPath,date(1:2));
+
+		%% Check for local files or download
+
+			ftpServer = 'ftp://ftp.cdc.noaa.gov/NARR/pressure/';
+
+			currentPath = pwd;
+
+			if exist(airName,'file') ~= 2 
+				cd(narrPath);
+				system(sprintf('wget %sair.%04g%02g.nc',ftpServer,date(1:2)));
+				cd(currentPath);
+			end
+
+			if exist(shumName,'file') ~= 2
+				cd(narrPath);
+				system(sprintf('wget %sshum.%04g%02g.nc',ftpServer,date(1:2)));
+				cd(currentPath);
+			end
+
+		%% Read Variables
+
+			info = ncinfo(airName);
+
+			variables = {info.Variables.Name};
+
+			for i = 1 : length(variables);
+				eval(sprintf('%s = ncread(''%s'',''%s'');',variables{i},airName,variables{i}));
+			end
+
+			shum = ncread(shumName,'shum');
+
+			variables{end+1} = 'shum';
+
+			% Time is in hours since 1800/01/01
+			time = time./24 + 657438;
     
-    narrFile = sprintf('%sNARR%04g%02g%02g.mat',narrPath,date);
-   
-    if exist(narrFile,'file') == 2
-        
-        load(narrFile(1:end-4))
+		%% Resave in daily matlab format
 
-    else
-    
-    %% Pick Files
+			dates = floor(time);
+			dates = unique(dates);
 
-         % Air Temperature @ Pressure Levels
-        airName = sprintf('%sair.%04g%02g.nc',narrPath,date(1:2));
-         % Specific Humidity @ Pressure Levels
-        shumName = sprintf('%sshum.%04g%02g.nc',narrPath,date(1:2));
+			airTotal = air;
+			shumTotal = shum;
+			timeTotal = time;
 
-    %% Check for nc files or download
-
-        ftpServer = 'ftp://ftp.cdc.noaa.gov/NARR/pressure/';
-
-        currentPath = pwd;
-
-        if exist(airName,'file') ~= 2 
-            cd(narrPath);
-            system(sprintf('wget %sair.%04g%02g.nc',ftpServer,date(1:2)));
-            cd(currentPath);
-        end
-
-        if exist(shumName,'file') ~= 2
-            cd(narrPath);
-            system(sprintf('wget %sshum.%04g%02g.nc',ftpServer,date(1:2)));
-            cd(currentPath);
-        end
-
-    %% Read Variables
-
-        info = ncinfo(airName);
-
-        variables = {info.Variables.Name};
-
-        for i = 1 : length(variables);
-            eval(sprintf('%s = ncread(''%s'',''%s'');',variables{i},airName,variables{i}));
-        end
-
-        shum = ncread(shumName,'shum');
-
-        variables{end+1} = 'shum';
-
-        % Time is in hours since 1800/01/01
-        time = time./24 + 657438;
-    
-    %% Resave in daily matlab format
-
-        dates = floor(time);
-        dates = unique(dates);
-
-        airTotal = air;
-        shumTotal = shum;
-        timeTotal = time;
-
-        for i = 1 : length(dates)
-            date = datevec(dates(i));
-            saveName = sprintf('%sNARR%04g%02g%02g.mat',narrPath,date(1:3));
-            air = squeeze(airTotal(:,:,:,floor(timeTotal)==dates(i)));
-            shum =  squeeze(shumTotal(:,:,:,floor(timeTotal)==dates(i)));
-            time = timeTotal(timeTotal == dates(i));
-            save(saveName,variables{:});
-        end
+			for i = 1 : length(dates)
+				date = datevec(dates(i));
+				saveName = sprintf('%s%s%04g%02g%02g.mat',narrPath,prefix,date(1:3));
+				air = squeeze(airTotal(:,:,:,floor(timeTotal)==dates(i)));
+				shum =  squeeze(shumTotal(:,:,:,floor(timeTotal)==dates(i)));
+				time = timeTotal(timeTotal == dates(i));
+				save(saveName,variables{:});
+			end
         
     end
     
