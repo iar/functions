@@ -1,5 +1,5 @@
 function [storm, strokes] = climate_import(date)
-%Imports a LIS data file:
+%Imports a reanlysis data file:
 %   YYYY,MM,DD,hh,mm,ss,lat,long,evnts,confidence,irradiance,area,duration
 %
 %   Written By:  Michael Hutchins
@@ -29,8 +29,10 @@ function [storm, strokes] = climate_import(date)
 		fileName=sprintf('%s%04g%02g%02g.mat',prefix,date(1:3)); 
 
 		% Load dataPath.dat file
-		dataPath = textread('dataPath.dat','%s\n');
-
+		fid = fopen('dataPath.dat');
+		dataPath = textscan(fid,'%s','Delimiter','\n');
+		dataPath = dataPath{1};
+		
 		% Check each path for the file
 		for i = 1 : size(dataPath,1);
 			
