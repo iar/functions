@@ -1,4 +1,4 @@
-function [ landStatus ] = land_check( lat, long )
+function [ landStatus, zStatus ] = land_check( lat, long )
 %LAND_CHECK loads ETOPO data and returns 1 for each lat/long point above
 %land and 0 for each point above water.
 %
@@ -41,6 +41,10 @@ function [ landStatus ] = land_check( lat, long )
 
 	% Get path land status
     landStatus = land(loc);
+	
+%% Get altitude
+
+	zStatus = z(loc);
 
 end
 
