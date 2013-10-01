@@ -19,8 +19,8 @@ function [ weather ] = reanalysis_match( lat, long, date )
 		hour = date(:,4);
 		date = date(:,1:3);
 	elseif size(date,2) == 3
-		date = date(:,1:3);
 		hour = zeros(size(date,1),1);
+		date = date(:,1:3);
 	else
 		warning('Unknown Input Format');
 	end
