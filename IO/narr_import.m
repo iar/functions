@@ -45,7 +45,7 @@ function [ air, shum, level, grid ] = narr_import( date )
 			% Generate load name to check
 			path = dataPath{i};
 			fileLoad = sprintf('%s%s/%s.mat',path,subdirectory,fileName);
-			fileImport = sprintf('%s%s/%s.loc',path,subdirectory,fileName);
+			fileDir = sprintf('%s%s',path,subdirectory);
 
 			% If found break out of the loop
 			if exist(fileLoad,'file') == 2
@@ -54,8 +54,7 @@ function [ air, shum, level, grid ] = narr_import( date )
 			end
 			
 			% If found break out of the loop and set import to true
-			if exist(fileImport,'file') == 2
-				filename = fileImport;
+			if exist(fileDir,'dir') == 7
 				import = true;
 				break;
 			end			
@@ -83,9 +82,9 @@ function [ air, shum, level, grid ] = narr_import( date )
     	%% Set raw filenames
 
 			% Air Temperature @ Pressure Levels
-			airName = sprintf('%sair.%04g%02g.nc',narrPath,date(1:2));
+			airName = sprintf('%sair.%04g%02g.nc',fileDir,date(1:2));
 			% Specific Humidity @ Pressure Levels
-			shumName = sprintf('%sshum.%04g%02g.nc',narrPath,date(1:2));
+			shumName = sprintf('%sshum.%04g%02g.nc',fileDir,date(1:2));
 
 		%% Check for local files or download
 
@@ -94,13 +93,13 @@ function [ air, shum, level, grid ] = narr_import( date )
 			currentPath = pwd;
 
 			if exist(airName,'file') ~= 2 
-				cd(narrPath);
+				cd(fileDir);
 				system(sprintf('wget %sair.%04g%02g.nc',ftpServer,date(1:2)));
 				cd(currentPath);
 			end
 
 			if exist(shumName,'file') ~= 2
-				cd(narrPath);
+				cd(fileDir);
 				system(sprintf('wget %sshum.%04g%02g.nc',ftpServer,date(1:2)));
 				cd(currentPath);
 			end
@@ -133,7 +132,7 @@ function [ air, shum, level, grid ] = narr_import( date )
 
 			for i = 1 : length(dates)
 				date = datevec(dates(i));
-				saveName = sprintf('%s%s%04g%02g%02g.mat',narrPath,prefix,date(1:3));
+				saveName = sprintf('%s%s%04g%02g%02g.mat',fileDir,prefix,date(1:3));
 				air = squeeze(airTotal(:,:,:,floor(timeTotal)==dates(i)));
 				shum =  squeeze(shumTotal(:,:,:,floor(timeTotal)==dates(i)));
 				time = timeTotal(timeTotal == dates(i));
