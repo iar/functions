@@ -1,10 +1,14 @@
 function [ groups ] = tree_traversal( tree )
-%TREE_TRAVERSAL(tree) groups tree entries in a left-right manner returning 
-%	a final list of groups across the tree
+%TREE_TRAVERSAL(tree) groups entries of the tree graph in a left-right
+%	manner returning a final list of groups across the tree graph
 %
 % Created by: Michael Hutchins
 
-	%% Cut down the size of tree
+%% Remove completely empty columns (if present)
+	
+	tree(:,sum(tree,1) == 0) = [];
+
+%% Cut down the size of tree
 	
 	maxWidth = max(sum(tree>0,2));
 	
@@ -24,36 +28,68 @@ function [ groups ] = tree_traversal( tree )
 	
 	tree = newTree;
 	
-	%% Initialzie arrays
-
-	groups = zeros(size(tree,1),1);
-
-	%% Traverse tree
+%% Create inverted tree (strokes belonging to groups)
 	
-	for i = 1 : size(tree,1)
-		
-		entries = tree(i,tree(i,:) > 0);
+	nodes = unique(tree(tree(:)>0));
 
-		if isempty(entries)
+	invertedTree = cell(max(nodes),1);
+	
+	for i = 1 : length(nodes);
+		
+		elements = find(sum(tree == nodes(i),2) > 0);
+
+		invertedTree{nodes(i)} = unique(elements);
+		
+	end
+	
+%% Traverse tree and invertedTree
+
+	groups = traverse(tree, invertedTree);
+	
+end
+	
+function [ IDs ] = traverse(graph, invertedGraph)
+	
+	%% Initialzie node ID array
+
+	IDs = zeros(size(graph,1),1);
+
+	%% Traverse graph
+	
+	for i = 1 : size(graph,1)
+		
+		% Get node groups
+		groups = graph(i,graph(i,:) > 0);
+
+		% If not connected continue
+		if isempty(groups)
 			continue
 		end
 		
-		if groups(i) == 0
-			groups(i) = entries(1);
+		% If ID not assigned, set to first group
+		if IDs(i) == 0
+			IDs(i) = groups(1);
 		end
 
-		first = groups(i);
+		% Set ID to ID of node_i
+		ID = IDs(i);
 
-		for j = 1 : length(entries)
+		% Go through members of each group
+		for j = 1 : length(groups)
 
-			update = sum(tree == entries(j),2) > 0;
+			% Get nodes within group(j)
+			nodes = invertedGraph{groups(j)};
 
-			groups(update & groups == 0) = first;
+			% Generate logical index of nodes to update
+			update = false(length(IDs),1);
+			update(nodes) = true;				
+
+			% Assign unassigned IDs to ID of node_i
+			IDs(update & IDs == 0) = ID;
 
 		end
-					
-	end
-	
+			
+	end	
 
 end
 
