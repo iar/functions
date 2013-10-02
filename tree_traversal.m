@@ -4,25 +4,45 @@ function [ groups ] = tree_traversal( tree )
 %
 % Created by: Michael Hutchins
 
-	%% Cut down the size of tree
+	%% Remove completely empty columns (if present)
 	
-	maxWidth = max(sum(tree>0,2));
+	tree(:,sum(tree,1) == 0) = [];
+
+	%% Traverse 2 columns at a time
 	
-	newTree = zeros(size(tree,1),maxWidth);
-	
-	for i = 1 : size(tree,1);
+	while size(tree,2) > 1
 		
-		entries = tree(i,tree(i,:) > 0);
-	
-		for j = 1 : length(entries)
-			
-			newTree(i,j) = entries(j);
-			
-		end
+		% Select first two columns
+		branches = tree(:,1:2);
+		tree(:,1:2) = [];
 		
+		% Label rows
+		branches = [branches, [1 : size(branches,1)]'];
+		
+		% Remove [0 0] rows
+		
+		branches(all(branches(:,1:2) == 0,2),:) = [];
+		
+		% Traverse the branch
+		
+		newBranch = traverse(branches(:,1:2));
+		
+		% Expand newBranch to the size of tree
+		
+		branch = zeros(size(tree,1),1);
+		branch(branches(:,3)) = newBranch;
+		
+		% Reduce branches to branch
+
+		tree = [branch, tree];
+
 	end
+
+	groups = tree;
 	
-	tree = newTree;
+end
+	
+function [ groups ] = traverse(tree)
 	
 	%% Initialzie arrays
 
