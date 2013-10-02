@@ -1,6 +1,16 @@
 function [ groups ] = tree_traversal( tree )
-%TREE_TRAVERSAL(tree) groups entries of the tree graph in a left-right
-%	manner returning a final list of groups across the tree graph
+%TREE_TRAVERSAL(tree) groups entries of the graph TREE through a graph
+%traversal that follow the algorithm:
+%
+%	1. Pick first node
+%	2. Get node ID or ID of first connected group
+%		(i) Assign ID if not assigned
+%	3. Get other nodes connected to each group
+%	4. Assign ID of first node to all connected nodes
+%	5. Repeat from (1) with next node in list
+%
+%	The algorithm is optimized by condensing TREE and creating an
+%	invertedGraph that gives the nodes in each group
 %
 % Created by: Michael Hutchins
 
