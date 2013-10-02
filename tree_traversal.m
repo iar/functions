@@ -34,27 +34,24 @@ function [ groups ] = tree_traversal( tree )
 		
 		entries = tree(i,tree(i,:) > 0);
 
-		if ~isempty(entries)
-		
-			if groups(i) == 0
-				groups(i) = entries(1);
-			end
-
-			first = groups(i);
-			
-			for j = 1 : length(entries)
-				
-				update = sum(tree == entries(j),2) > 0;
-				
-				nextStrokes = false(size(groups,1),1);
-				nextStrokes(i : end) = true;
-				
-				groups(update & groups == 0) = first;
-				
-			end
-			
+		if isempty(entries)
+			continue
 		end
 		
+		if groups(i) == 0
+			groups(i) = entries(1);
+		end
+
+		first = groups(i);
+
+		for j = 1 : length(entries)
+
+			update = sum(tree == entries(j),2) > 0;
+
+			groups(update & groups == 0) = first;
+
+		end
+					
 	end
 	
 
