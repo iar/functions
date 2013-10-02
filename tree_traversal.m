@@ -38,7 +38,7 @@ function [ groups ] = tree_traversal( tree )
 		
 		elements = find(sum(tree == nodes(i),2) > 0);
 
-		invertedTree{i} = unique(elements);
+		invertedTree{nodes(i)} = unique(elements);
 		
 	end
 	
