@@ -34,7 +34,7 @@ function [ groups ] = tree_traversal( tree )
 	
 	nodes = unique(tree(tree(:)>0));
 
-	invertedTree = cell(length(nodes),1);
+	invertedTree = cell(max(nodes),1);
 	
 	for i = 1 : length(nodes);
 		
@@ -46,6 +46,7 @@ function [ groups ] = tree_traversal( tree )
 	
 %% Traverse tree and invertedTree
 
+	groups = traverse(tree, invertedTree);
 	
 end
 	
@@ -71,12 +72,19 @@ function [ groups ] = traverse(tree, invertedTree)
 			
 			for j = 1 : length(entries)
 				
-				update = sum(tree == entries(j),2) > 0;
+				% Get members to assign groups
+
+				members = invertedTree{entries(j)};
+
+				update = false(length(groups),1);
+				update(members) = true;				
 				
-				nextStrokes = false(size(groups,1),1);
-				nextStrokes(i : end) = true;
-				
+				% Assign unassigned groups to first
 				groups(update & groups == 0) = first;
+				
+				% Add members to group first
+
+				invertedTree{first} = unique([invertedTree{first}; members]);
 				
 			end
 			
