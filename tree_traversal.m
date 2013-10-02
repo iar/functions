@@ -50,50 +50,48 @@ function [ groups ] = tree_traversal( tree )
 	
 end
 	
-function [ groups ] = traverse(tree, invertedTree)
+function [ IDs ] = traverse(graph, invertedGraph)
 	
-	%% Initialzie arrays
+	%% Initialzie node ID array
 
-	groups = zeros(size(tree,1),1);
+	IDs = zeros(size(graph,1),1);
 
 	%% Traverse graph
 	
-	for i = 1 : size(tree,1)
+	for i = 1 : size(graph,1)
 		
-		% Get connected IDNodes
-		idNodes = tree(i,tree(i,:) > 0);
+		% Get node groups
+		groups = graph(i,graph(i,:) > 0);
 
 		% If not connected continue
-		if isempty(idNodes)
+		if isempty(groups)
 			continue
 		end
 		
-		% If groupID not assigned, set to first IDNode
-		if groups(i) == 0
-			groups(i) = idNodes(1);
+		% If ID not assigned, set to first group
+		if IDs(i) == 0
+			IDs(i) = groups(1);
 		end
 
-		% Set ID to groupID of node_i
-		ID = groups(i);
+		% Set ID to ID of node_i
+		ID = IDs(i);
 
-		% Go through each connected IDNode
-		for j = 1 : length(idNodes)
+		% Go through members of each group
+		for j = 1 : length(groups)
 
-			% Get nodes connceted to IDNode
-			nodes = invertedTree{idNodes(j)};
+			% Get nodes within group(j)
+			nodes = invertedGraph{groups(j)};
 
-			% Generate logical index from list
-			update = false(length(groups),1);
+			% Generate logical index of nodes to update
+			update = false(length(IDs),1);
 			update(nodes) = true;				
 
 			% Assign unassigned IDs to ID of node_i
-			groups(update & groups == 0) = ID;
+			IDs(update & IDs == 0) = ID;
 
 		end
 			
-		
-	end
-	
+	end	
 
 end
 
