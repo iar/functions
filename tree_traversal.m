@@ -29,8 +29,6 @@ function [ groups ] = tree_traversal( tree )
 	tree = newTree;
 	
 %% Create inverted tree (strokes belonging to groups)
-
-	n = hist(tree(tree(:)>0),max(tree(tree(:)>0)));
 	
 	nodes = unique(tree(tree(:)>0));
 
@@ -38,8 +36,8 @@ function [ groups ] = tree_traversal( tree )
 	
 	for i = 1 : length(nodes);
 		
-		elements = find(sum(tree == nodes(i),2) == 1);
-		
+		elements = find(sum(tree == nodes(i),2) > 0);
+
 		invertedTree{i} = unique(elements);
 		
 	end
