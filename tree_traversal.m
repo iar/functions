@@ -1,48 +1,55 @@
 function [ groups ] = tree_traversal( tree )
-%TREE_TRAVERSAL(tree) groups tree entries in a left-right manner returning 
-%	a final list of groups across the tree
+%TREE_TRAVERSAL(tree) groups entries of the tree graph in a left-right
+%	manner returning a final list of groups across the tree graph
 %
 % Created by: Michael Hutchins
 
-	%% Remove completely empty columns (if present)
+%% Remove completely empty columns (if present)
 	
 	tree(:,sum(tree,1) == 0) = [];
 
-	%% Traverse 2 columns at a time
+%% Cut down the size of tree
 	
-	while size(tree,2) > 1
+	maxWidth = max(sum(tree>0,2));
+	
+	newTree = zeros(size(tree,1),maxWidth);
+	
+	for i = 1 : size(tree,1);
 		
-		% Select first two columns
-		branches = tree(:,1:2);
-		tree(:,1:2) = [];
+		entries = tree(i,tree(i,:) > 0);
+	
+		for j = 1 : length(entries)
+			
+			newTree(i,j) = entries(j);
+			
+		end
 		
-		% Label rows
-		branches = [branches, [1 : size(branches,1)]'];
-		
-		% Remove [0 0] rows
-		
-		branches(all(branches(:,1:2) == 0,2),:) = [];
-		
-		% Traverse the branch
-		
-		newBranch = traverse(branches(:,1:2));
-		
-		% Expand newBranch to the size of tree
-		
-		branch = zeros(size(tree,1),1);
-		branch(branches(:,3)) = newBranch;
-		
-		% Reduce branches to branch
-
-		tree = [branch, tree];
-
 	end
+	
+	tree = newTree;
+	
+%% Create inverted tree (strokes belonging to groups)
 
-	groups = tree;
+	n = hist(tree(tree(:)>0),max(tree(tree(:)>0)));
+	
+	nodes = unique(tree(tree(:)>0));
+
+	invertedTree = cell(length(nodes),1);
+	
+	for i = 1 : length(nodes);
+		
+		elements = find(sum(tree == nodes(i),2) == 1);
+		
+		invertedTree{i} = elements;
+		
+	end
+	
+%% Traverse tree and invertedTree
+
 	
 end
 	
-function [ groups ] = traverse(tree)
+function [ groups ] = traverse(tree, invertedTree)
 	
 	%% Initialzie arrays
 
