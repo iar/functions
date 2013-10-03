@@ -102,5 +102,10 @@ function [a,b]=caliper(X,Y,varargin)
 		a = b1;
 		b = a1;
 	end
+
+%% Condition output to have one value
+
+	a = a(1);
+	b = b(1);
     
 end
