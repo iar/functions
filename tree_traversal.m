@@ -64,6 +64,10 @@ function [ IDs ] = traverse(graph, invertedGraph)
 
 	IDs = zeros(size(graph,1),1);
 
+	%% Array of nodes to update
+	
+	needID = 1 : size(graph,1);
+	
 	%% Traverse graph
 	
 	for i = 1 : size(graph,1)
@@ -90,13 +94,17 @@ function [ IDs ] = traverse(graph, invertedGraph)
 			% Get nodes within group(j)
 			nodes = invertedGraph{groups(j)};
 
-			% Generate logical index of nodes to update
-			update = false(length(IDs),1);
-			update(nodes) = true;				
-
+			% Find intersection of nodes in group and nodes to update			
+			update = ismembc(nodes, needID);
+			
 			% Assign unassigned IDs to ID of node_i
-			IDs(update & IDs == 0) = ID;
+			IDs(nodes(update)) = ID;
 
+			%% Remove updated IDs from needID
+			%remove = ismembc(needID, nodes);
+			
+			%needID(remove) = [];
+	
 		end
 			
 	end	
