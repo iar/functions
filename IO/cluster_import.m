@@ -88,7 +88,7 @@ function [ cluster ] = cluster_import( date )
                 % Save traversed tree data
 
                 saveName = sprintf('%s%s%04g%02g%02g%s',fileDir,prefix,suffix);
-                save(saveName, cluster);
+                save(saveName, 'cluster');
  
 	else
 		load(filename);
