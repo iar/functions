@@ -7,7 +7,7 @@ function [ cluster ] = cluster_import( date )
 
 %% Filepaths
 
-	subdirectory = 'clusterFiles';
+	subdirectory = 'clusterFiles/';
 	prefix = 'cluster';
 	suffix = '';
 
@@ -83,13 +83,12 @@ function [ cluster ] = cluster_import( date )
 
                 % Traverse tree
 
+keyboard
                 cluster = tree_traversal(tree);
 
                 % Save traversed tree data
-
-                saveName = sprintf('%s%s%04g%02g%02g%s',fileDir,prefix,suffix);
+                saveName = sprintf('%s%s%04g%02g%02g%s',fileDir,prefix,date,suffix);
                 save(saveName, 'cluster');
- 
 	else
 		load(filename);
         
