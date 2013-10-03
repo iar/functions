@@ -12,6 +12,8 @@ function [ groups ] = tree_traversal( tree )
 %	The algorithm is optimized by condensing TREE and creating an
 %	invertedGraph that gives the nodes in each group
 %
+%	Current runtime is O(n^1.5)
+%
 % Created by: Michael Hutchins
 
 %% Remove completely empty columns (if present)
@@ -99,11 +101,6 @@ function [ IDs ] = traverse(graph, invertedGraph)
 			
 			% Assign unassigned IDs to ID of node_i
 			IDs(nodes(update)) = ID;
-
-			%% Remove updated IDs from needID
-			%remove = ismembc(needID, nodes);
-			
-			%needID(remove) = [];
 	
 		end
 			
