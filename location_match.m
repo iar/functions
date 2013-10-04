@@ -16,28 +16,20 @@ function [ match ] = location_match( lat, long, latTable, longTable )
     latTable = latTable(:);
     longTable = longTable(:);
 
-    parfor i = 1 : length(lat);
+    for i = 1 : length(lat);
 
-        tolerance = 0.1;
-        location = [];
+		dist = abs(latTable - lat(i)) +...
+			   abs(longTable - long(i));
+		minDist = min(dist);
 
-        while isempty(location)
+		index = find(dist == minDist);
 
-            loc = abs(latTable - lat(i)) < tolerance &...
-                  abs(longTable - long(i)) < tolerance;
-
-            if sum(loc) >= 1
-                [I, J] = ind2sub(tableSize,find(loc));  
-                location = [I,J]; 
-            else
-                tolerance = 2 * tolerance;
-			end
-			
-			if tolerance > 5
-				location = [NaN,NaN];
-			end
-
-        end
+		if length(index) >= 1 && minDist < 5;
+			[I, J] = ind2sub(tableSize,index);  
+			location = [I,J]; 
+		else
+			location = [NaN, NaN];
+		end
 
         if size(location,1) > 1
             location = mode(location);
