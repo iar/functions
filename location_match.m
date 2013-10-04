@@ -11,29 +11,18 @@ function [ match ] = location_match( lat, long, latTable, longTable )
 
     match = zeros(length(lat),2);
 
-    tableSize = size(latTable);
-
-    latTable = latTable(:);
-    longTable = longTable(:);
-
     for i = 1 : length(lat);
 
 		dist = abs(latTable - lat(i)) +...
 			   abs(longTable - long(i));
-		minDist = min(dist);
+		minDist = min(dist(:));
 
-		index = find(dist == minDist);
-
-		if length(index) >= 1 && minDist < 5;
-			[I, J] = ind2sub(tableSize,index);  
+		if minDist < 5;
+			[I,J] = find(dist == minDist,1,'first');
 			location = [I,J]; 
 		else
 			location = [NaN, NaN];
 		end
-
-        if size(location,1) > 1
-            location = mode(location);
-        end
         
         match(i,:) = location;
         
