@@ -83,8 +83,6 @@ function [data] = ae_import(date)
 
 		fclose(fid);
 		
-		fclose(fid);
-		
 	else
 		
 		load(filename)
