@@ -29,14 +29,14 @@ function [ h ] = pairwise_plot( data, names )
 	
 	%% Plot data
 	
-	for i = 1 : N
-		for j = 1 : N
+	for j = 1 : N
+		for i = 1 : N
 			
 			if i ~= j
 				
 				subplot(N,N,nPlot)
 				
-				if i < j
+				if i > j
 				
 					plot(data(:,i),data(:,j),'.')
 
@@ -51,13 +51,13 @@ function [ h ] = pairwise_plot( data, names )
 					xSteps = axisSteps(bounds{i}, floor(M/10));
 					ySteps = axisSteps(bounds{j}, floor(M/10));
 
-					n = hist3([data(:,[i,j])],{xSteps,ySteps});
+					n = hist3(data(:,[i,j]),{xSteps,ySteps});
 					
-					imagesc(xSteps,ySteps,n);
+					imagesc(xSteps,ySteps,n');
 					set(gca,'YDir','Normal')
 	
-					xlabel(names{j})
-					ylabel(names{i})
+					xlabel(names{i})
+					ylabel(names{j})
 
 				end
 			end
