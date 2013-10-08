@@ -11,6 +11,8 @@ function [ h ] = pairwise_plot( data, names, logPlotting )
 	
 	N = size(data,2);
 	M = size(data,1);
+	
+	imageN = 50;
 
 	%% Condition the input data
 	
@@ -77,25 +79,23 @@ function [ h ] = pairwise_plot( data, names, logPlotting )
 					ylabel(names{j})
 					
 				else
-										
-					xSteps = axisSteps(bounds{i}, floor(M/10), logPlotting(i));
-					ySteps = axisSteps(bounds{j}, floor(M/10), logPlotting(j));
+																					
+					xSteps = axisSteps(bounds{i}, imageN, logPlotting(i));
+					ySteps = axisSteps(bounds{j}, imageN, logPlotting(j));
 
 					n = hist3(data(:,[i,j]),{xSteps,ySteps});
 					
-					imagesc(xSteps,ySteps,n');
+					imagesc(xSteps,ySteps,log10(n)');
 					set(gca,'YDir','Normal')
 					
 					if logPlotting(i)
-						set(gca,'XScale','log')
-						set(gca,'XTick',10.^(unique(floor(log10(xSteps)))));
+						set(gca,'XTick',[]);
 					end
 					
 					if logPlotting(j)
-						set(gca,'YScale','log')
-						set(gca,'YTick',10.^(unique(floor(log10(ySteps)))));
+						set(gca,'YTick',[]);
 					end
-	
+					
 					xlabel(names{i})
 					ylabel(names{j})
 
