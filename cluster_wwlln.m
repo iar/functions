@@ -6,9 +6,9 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 
 	%% clusters Parameters
 
-		eps = .12;
-		minPts = 2;
-		timeScale = 9000;
+		eps = .12; % Degrees
+		minPts = 2; % Points
+		epsTime = 1080; % Seconds
 		windowSize = 0.5;
 		centerSize = 0.5;
 		
@@ -25,13 +25,16 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 					eps = varargin{i+1};
 				case 'minPts'
 					minPts = varargin{i+1};
-				case 'timeScale'
-					timeScale = varargin{i+1};
+				case 'epsTime'
+					epsTime = varargin{i+1};
 			end
 		end
 	end
 			
 	%% Convert time to distance
+	
+		timeScale = epsTime / eps;
+	
 		seconds = datenum(data(:,1:6));
 		seconds = seconds - min(seconds);
 		seconds = seconds * 24*3600;
