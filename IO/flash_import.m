@@ -81,8 +81,12 @@ function [ flash ] = flash_import( date )
 
 		wwlln = ae_import(date);
 
-		flash = cluster_wwlln(wwlln,'minPts',1,'eps',0.12,'epsTime',60);
+		flash = cluster_wwlln(wwlln,'minPts',2,'eps',0.12,'epsTime',60);
 
+		% Assign group 0 (unclustered) unique IDs
+		
+		flash(flash == 0) = (max(flash) + 1) + [1 : sum(flash == 0)];		
+		
 		% Save flash data
 		saveName = sprintf('%s%s%04g%02g%02g%s',fileDir,prefix,date,suffix);
 		save(saveName, 'flash');
