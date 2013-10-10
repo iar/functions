@@ -81,7 +81,7 @@ function [ flash ] = flash_import( date )
 
 		wwlln = ae_import(date);
 
-		flash = cluster_wwlln(wwlln,'minPts',2,'eps',0.12,'epsTime',60);
+		flash = cluster_wwlln(wwlln,'minPts',2,'eps',0.12,'epsTime',1);
 
 		% Assign group 0 (unclustered) unique IDs
 		
