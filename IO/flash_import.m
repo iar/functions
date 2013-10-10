@@ -81,60 +81,7 @@ function [ flash ] = flash_import( date )
 
 		wwlln = ae_import(date);
 
-		stormID = cluster_import(date);		
-
-		% Process flashes within storms
-
-		stormList = unique(stormID);
-
-		indexFlash = 1;
-		
-		flash = zeros(size(wwlln,1),1);
-
-		for i = 1 : length(stormList);
-
-			loc = stormID == stormList(i);
-
-			storm = wwlln(loc,:);
-
-			if stormList(i) == 0
-
-				flashID = 1 : size(storm,1);
-
-			else
-
-				flashID = cluster_wwlln(storm,'minPts',1,'eps',0.12,'epsTime',60);
-
-			end
-
-			N = length(flashID);
-
-			flash(indexFlash : indexFlash + N - 1) = flashID + max(flash) + 1;
-
-			indexFlash = indexFlash + N;
-
-		end
-
-
-		% Reduce flashID numbers
-		
-		flashList = unique(flash);
-		
-		newFlash = zeros(length(flash),1);
-		
-		index = 1;
-		
-		for i = 1 : length(flashList);
-			
-			loc = flash == flashList(i);
-			
-			newFlash(loc) = index;
-			
-			index = index + 1;
-			
-		end
-		
-		flash = newFlash;
+		flash = cluster_wwlln(wwlln,'minPts',1,'eps',0.12,'epsTime',60);
 
 		% Save flash data
 		saveName = sprintf('%s%s%04g%02g%02g%s',fileDir,prefix,date,suffix);
