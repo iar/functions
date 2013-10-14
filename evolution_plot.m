@@ -15,6 +15,8 @@ function [ h ] = evolution_plot( data, names, logPlotting, nLevels )
 		error('No level set defined')
 	end
 	
+	imageN = 50;
+	
 	%% Condition the input data
 	
 	switch nargin
@@ -29,6 +31,7 @@ function [ h ] = evolution_plot( data, names, logPlotting, nLevels )
 			nLevels = 4;
 	end
 	
+	logPlotting = logical(logPlotting);
 
 	%% Define levels
 			
@@ -62,7 +65,6 @@ function [ h ] = evolution_plot( data, names, logPlotting, nLevels )
 	
 	for i = 1 : nLevels
 		
-		hold on
 		
 		level1 = levels(i);
 		level2 = levels(i + 1);
@@ -107,6 +109,10 @@ function [ h ] = evolution_plot( data, names, logPlotting, nLevels )
 							level1, level2);
 		levelNames{i} = legendText;
 		
+		if i == 1
+			hold on
+		end
+		
 	end
 	
 	title('Plot')
@@ -116,6 +122,17 @@ function [ h ] = evolution_plot( data, names, logPlotting, nLevels )
 	
 	%% Bottom plots: denisty plots of total data
 
+	% Setup image bounds
+	
+	bounds = {};
+	
+	for i = 1 : M
+		a = data(:,i,:);
+		a = a(:);
+		a = a(~isnan(a));
+		bounds{i} = [prctile(a,5), prctile(a,95)];
+	end
+	
 	for i = 1 : nLevels
 		
 		subplot(nPlot, mPlot, pPlot);
@@ -127,38 +144,60 @@ function [ h ] = evolution_plot( data, names, logPlotting, nLevels )
 		loc = levelValues >= level1 &...
 			  levelValues <  level2;
 		
-		x = squeeze(data(loc,2,:));
+		%x = squeeze(data(loc,2,:));
 		y = squeeze(data(loc,1,:));
 
 		y(y == 0) = NaN;
 		
-		if P == 10
-			x = 1 : 10;
-		else
-			xStep = x(1,2) - x(1,1);
-			x = 0 : xStep : xStep * (length(y) - 1);
+		ySteps = axisSteps(bounds{1}, imageN, logPlotting(1));
+		
+		x = repmat([1 : P],size(y,1),1);
+		
+		for j = 1 : size(y,1);
+			xSlice = x(j,:);
+			ySlice = y(j,:);
+			
+			n = hist3([xSlice(:),ySlice(:)],{xSlice(:),ySteps});
+			
+			if j == 1
+				levelDensity = n;
+			else
+				levelDensity = levelDensity + n;
+			end
+				
+		end
 
-			x = x * 24;
+		imagesc(xSlice,ySteps,log10(levelDensity)');
+
+		set(gca,'YDir','Normal')
+
+		if logPlotting(2)
+			set(gca,'XTick',[]);
 		end
-		
-		if logPlotting(1) & ~logPlotting(2)
-			semilogy(x,y);
-		elseif logPlotting(2) & ~logPlotting(1)
-			semilogx(x,y);
-		elseif logPlotting(1) & logPlotting(2)
-			loglog(x,y)
-		else
-			plot(x,y);
+
+		if logPlotting(1)
+			set(gca,'YTick',[]);
 		end
+
+		title(levelNames{i})		
 		
-		xlabel(names{2})
-		ylabel(names{1})
-		
-		titleText = sprintf('%s: %.2g -- %.2g',...
-							names{3},...
-							level1, level2);
-		
-		title(titleText)
 	end
 	
+end
+
+function steps = axisSteps(bound, n, logBound)
+
+	start = bound(1);
+	stop = bound(2);
+	
+	if logBound
+		
+		steps = logspace(log10(start), log10(stop), n);
+		
+	else
+		
+		steps = linspace(start, stop, n);
+		
+	end
+
 end
