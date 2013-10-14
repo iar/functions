@@ -44,22 +44,25 @@ function [ h ] = evolution_plot( data, names, logPlotting, nLevels )
 	
 	levels = linspace(levelRange(1), levelRange(2), nLevels + 1);
 	
+	levelColors = jet(nLevels);
+	levelNames = cell(nLevels,1);
+	
 	%% Plot 
-	
-	keyboard
-	
+		
 	figure
 	
-	nPlot = 2;
-	mPlot = nLevels;
+	nPlot =	2 * ceil(nLevels/3);
+	mPlot = 3;
 	pPlot = 1;
 	
-	% Top row: averaged data
+	%% Top plots: averaged data
+
+	subplot(nPlot, mPlot, 1 : (nPlot/2) * mPlot);
+	pPlot = pPlot + (nPlot/2) * mPlot;
 	
 	for i = 1 : nLevels
 		
-		subplot(nPlot, mPlot, pPlot);
-		pPlot = pPlot + 1;
+		hold on
 		
 		level1 = levels(i);
 		level2 = levels(i + 1);
@@ -77,6 +80,57 @@ function [ h ] = evolution_plot( data, names, logPlotting, nLevels )
 		else
 			y = nanmean(y,1);
 		end
+		
+		if P == 10
+			x = 1 : 10;
+		else
+			xStep = x(1,2) - x(1,1);
+			x = 0 : xStep : xStep * (length(y) - 1);
+
+			x = x * 24;
+		end
+		
+		if logPlotting(1) & ~logPlotting(2)
+			semilogy(x,y,'Color',levelColors(i,:));
+		elseif logPlotting(2) & ~logPlotting(1)
+			semilogx(x,y,'Color',levelColors(i,:));
+		elseif logPlotting(1) & logPlotting(2)
+			loglog(x,y,'Color',levelColors(i,:))
+		else
+			plot(x,y,'Color',levelColors(i,:));
+		end
+		
+
+		
+		legendText = sprintf('%s: %.2g -- %.2g',...
+							names{3},...
+							level1, level2);
+		levelNames{i} = legendText;
+		
+	end
+	
+	title('Plot')
+	legend(levelNames);
+	xlabel(names{2})
+	ylabel(names{1})
+	
+	%% Bottom plots: denisty plots of total data
+
+	for i = 1 : nLevels
+		
+		subplot(nPlot, mPlot, pPlot);
+		pPlot = pPlot + 1;
+		
+		level1 = levels(i);
+		level2 = levels(i + 1);
+		
+		loc = levelValues >= level1 &...
+			  levelValues <  level2;
+		
+		x = squeeze(data(loc,2,:));
+		y = squeeze(data(loc,1,:));
+
+		y(y == 0) = NaN;
 		
 		if P == 10
 			x = 1 : 10;
@@ -107,7 +161,4 @@ function [ h ] = evolution_plot( data, names, logPlotting, nLevels )
 		title(titleText)
 	end
 	
-	% Bottom row: total data
-
-
 end
