@@ -61,6 +61,8 @@ function [ h ] = level_plot( data, names, logPlotting, nLevels, varSteps )
 	[xBase, xRange] = levelDef(x, logPlotting(1), varSteps(1));
 	[yBase, yRange] = levelDef(y, logPlotting(2), varSteps(2));
 	
+	xStep = xBase(end) - xBase(end-1);
+	
 	%% Format data
 
 	levelDensity = zeros(length(xBase),length(yBase),nLevels);
@@ -77,10 +79,16 @@ function [ h ] = level_plot( data, names, logPlotting, nLevels, varSteps )
 		xLevel = x(loc);
 		yLevel = y(loc);
 		
-		for j = 1 : length(xBase) -1 
+		for j = 1 : length(xBase) 
 			
-			xLoc = xLevel >= xBase(j) &...
+			if j == length(xBase)
+				xLoc = xLevel >= xBase(j) &...
+				   xLevel < xBase(j) + xStep;
+			else
+				xLoc = xLevel >= xBase(j) &...
 				   xLevel < xBase(j + 1);
+			end
+
 			
 			yHist = hist(yLevel(xLoc),yBase);
 			
