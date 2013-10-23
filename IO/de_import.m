@@ -5,7 +5,7 @@ function [de_map,de_map_high,de_time] = de_import(date)
 
 %% Filepaths
 
-	subdirectory = 'DEfiles';
+	subdirectory = 'deMaps';
 	prefix = 'DE';
 	suffix = '';
 
