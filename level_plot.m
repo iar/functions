@@ -1,4 +1,4 @@
-function [ levelMean, levelDensity ] = level_plot( data, names, logPlotting, nLevels, varSteps )
+function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotting, nLevels, varSteps )
 %% LEVEL_PLOT plots the time series of data[:,1] vs data[:,2] split
 %	over the level variable data[:,3].
 %	nLevels are found, with the default of 4 levels
