@@ -27,7 +27,7 @@ function [a,b]=caliper(X,Y,varargin)
 			centering='mean';
 		elseif strncmp(Options{i},'RMS',3)
 			centering='rms';
-		elseif strncmp(Options{i},'Degree',6)
+		elseif strncmp(Options{i},'Deg',3)
 			Degree=true;
 		end
 	end
