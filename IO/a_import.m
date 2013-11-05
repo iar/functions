@@ -75,7 +75,7 @@ function [data] = a_import(date)
 
 %% Read in data
 	
-	fid = fopen('filename');
+	fid = fopen(filename);
 	
 	data=fscanf(fid,'%d/%d/%d,%d:%d:%f,%f,%f,%f,%d',[10,Inf]);
 
