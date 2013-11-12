@@ -39,7 +39,7 @@ function [RData] = r_import(date)
 			path = dataPath{i};
 
 			% If found break out of the loop
-			if exist(fileLoad,'dir') == 7
+			if exist(path,'dir') == 7
 				filePath = path;
 				break;
 			end
