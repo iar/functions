@@ -5,7 +5,7 @@ function [RData] = r_import(date)
 
 %% Filepaths
 
-	subdirectory = 'Rfiles';
+	subdirectory = 'Rfiles/';
 	prefix = 'R';
 	suffix = '';
 
@@ -71,7 +71,8 @@ function [RData] = r_import(date)
 		if datenum(date) <= datenum([2005,7,26])
 			for i = 0 : 23
 				Date=[date(1:3),i];
-				fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:4)));
+				fid=fopen(sprintf('%s%sr%04g/r%04g%02g/R%04g%02g%02g%02g',...
+					r_path,subdirectory,Date(1),Date(1:2),Date(1:4)));
 
 				if fid > -1
 					rdata=fscanf(fid,'%g %f',[2,Inf]);
@@ -91,7 +92,8 @@ function [RData] = r_import(date)
 		else
 			for i=0:10:1440
 				Date=datevec(datenum([date(1:3),0,i,0]));
-				fid=fopen(sprintf('%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',r_path,Date(1),Date(1:2),Date(1:5)));
+				fid=fopen(sprintf('%s%sr%04g/r%04g%02g/R%04g%02g%02g%02g%02g',...
+					r_path,subdirectory,Date(1),Date(1:2),Date(1:5)));
 
 				if fid > -1
 
