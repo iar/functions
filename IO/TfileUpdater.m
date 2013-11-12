@@ -5,7 +5,7 @@
 
 stations
 tic;
-dateRange = datenum([2005,01,01]):datenum([2013,03,14]);
+dateRange = datenum([2013,05,13]):datenum([2013,11,11]);
 tfile = zeros(length(dateRange),size(station_loc,1)+1);
 
 for i = 1 : length(dateRange);
@@ -24,5 +24,5 @@ for i = 1 : length(dateRange);
     
 end
 
-tfileName=sprintf('/wd2/Tfiles/T%04g%02g%02g.dat',Date(1:3));
+tfileName=sprintf('/wd2/Tfiles/T%04g%02g%02g_partial.dat',Date(1:3));
 tab_export(tfileName,tfile);
