@@ -37,6 +37,7 @@ function [flashes, viewtime, groups] = lis_import(date)
 		fid = fopen('dataPath.dat');
 		dataPath = textscan(fid,'%s','Delimiter','\n');
 		dataPath = dataPath{1};
+		fclose(fid);
 		
 		% Check each path for the file
 		for i = 1 : size(dataPath,1);
