@@ -1,9 +1,17 @@
-function [ randNumber ] = randPDF( n, pdf )
+function [ randNumber ] = randPDF( n, pdf, seed )
 %RANDPDF generates n random numbers that follow the given probably density
 %	function PDF. PDF should be a 2 column vector with the basis and pdf
-%	values
+%	values.  SEED is an optional input to specify the random number seed.
 %
 %	Written by: Michael Hutchins
+
+%% Set seed
+
+	switch nargin
+		case 3
+			s = RandStream('mcg16807','Seed',seed);
+			RandStream.setGlobalStream(s);
+	end
 
 %% Get cumulative distribution function
 
