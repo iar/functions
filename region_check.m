@@ -34,6 +34,16 @@ function [ regionID, regionName ] = region_check( lat, long )
 
 %% Format Lat/Long
 
+	if nargin == 1 && any(size(lat) == 2)
+		if size(lat,1) == 2
+			long = lat(2,:);
+			lat = lat(1,:);
+		else
+			long = lat(:,2);
+			lat = lat(:,1);
+		end
+	end
+
 	lat = lat(:);
 	long = long(:);
 
