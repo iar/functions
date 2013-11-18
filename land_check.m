@@ -27,6 +27,35 @@ function [ landStatus, zStatus ] = land_check( lat, long )
     land = z>0;
 
 	
+%% Format Lat/Long
+
+	if nargin == 1 && any(size(lat) == 2)
+		if size(lat,1) == 2
+			long = lat(2,:);
+			lat = lat(1,:);
+		else
+			long = lat(:,2);
+			lat = lat(:,1);
+		end
+	end
+
+	lat = lat(:);
+	long = long(:);
+
+	if length(lat) ~= length(long)
+		error('Latitude and Longitude must be the same length.')
+	end
+	
+	% Input check:
+	if any(abs(lat) > 90)
+		error('Input latitudes must be between -90 and 90 degrees, inclusive.')
+	end
+	
+	if any(abs(long) > 180)
+		long = wrapTo180(long);
+	end
+
+	
 %% Check land/ocean location
 	
 	% Normalize to matlab index (1:360 vs -180:180)
