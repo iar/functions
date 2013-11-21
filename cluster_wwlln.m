@@ -27,6 +27,10 @@ function [ storm, tree ] = cluster_wwlln( data, varargin)
 					minPts = varargin{i+1};
 				case 'epsTime'
 					epsTime = varargin{i+1};
+				case 'windowSize'
+					windowSize = varargin{i + 1};
+				case 'centerSize'
+					centerSize = varargin{i + 1};					
 			end
 		end
 	end
