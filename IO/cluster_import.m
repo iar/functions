@@ -79,15 +79,13 @@ function [ cluster ] = cluster_import( date )
    
 		% Load tree data
 
-                [~, tree] = tree_import(date);
-
-                % Traverse tree
-
-                cluster = tree_traversal(tree);
-
-                % Save traversed tree data
-                saveName = sprintf('%s%s%04g%02g%02g%s',fileDir,prefix,date,suffix);
-                save(saveName, 'cluster');
+		data = ae_import(date);
+		cluster = cluster_wwlln(data);
+		
+		% Save traversed tree data
+		saveName = sprintf('%s%s%04g%02g%02g%s',fileDir,prefix,date,suffix);
+		save(saveName, 'cluster');
+		
 
 	else
 		load(filename);
