@@ -1,4 +1,4 @@
-function [ tracks ] = network_connections( wwlln, apdata )
+function [ tracks ] = network_connections( wwlln, apdata, nlegs )
 %NETWORK_CONNECTIONS returns the great circle paths connecting strokes to
 %	their locating stations.
 %
@@ -8,7 +8,11 @@ function [ tracks ] = network_connections( wwlln, apdata )
 
 	tracks = [NaN, NaN];
 	stations	
-	nlegs = 10; % number of segments per path
+	
+	switch nargin
+		case 2
+			nlegs = 10;% number of segments per path
+	end
 	
 %% Strip away SCU units from apdata
 
