@@ -8,7 +8,7 @@ function [ storm, tree ] = cluster_entln( data, varargin)
 
 		eps = .12; % Degrees
 		minPts = 2; % Points
-		epsTime = 1080; % Seconds
+		epsTime = 900; % Seconds
 		windowSize = 0.25;
 		centerSize = 0.25;
 		
