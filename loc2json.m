@@ -19,12 +19,18 @@ function loc2json( data, exportName )
 		fprintf(fid,'\t"%i" : {',strokeID);
 		fprintf(fid,'"info" : "%s",\n',info);
 		fprintf(fid,'\t\t"date" : "%g/%g/%g",\n',stroke(1:3));
-		fprintf(fid,'\t\t"time" : "%g:%g:%g UTC",\n',stroke(4:6));
-		fprintf(fid,'\t\t"unixTime" : %.2f,\n',unixTime);
+		fprintf(fid,'\t\t"time" : "%g:%g:%.1f UTC",\n',stroke(4:6));
+		fprintf(fid,'\t\t"unixTime" : %.1f,\n',unixTime);
 		fprintf(fid,'\t\t"lat" : %.2f,\n',stroke(7));
 		fprintf(fid,'\t\t"long" : %.2f,\n',stroke(8));
-		fprintf(fid,'\t\t"energy" : %.0f},\n',stroke(11));
+		fprintf(fid,'\t\t"energy" : %.0f}',stroke(11));
 
+		if i == size(data,1);
+			fprintf(fid,'\n');
+		else
+			fprintf(fid,',\n');
+		end
+		
 		
 	end
 
