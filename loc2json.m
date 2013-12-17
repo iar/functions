@@ -15,10 +15,10 @@ function loc2json( data, exportName )
 		unixTime = datenum(stroke(1:6)) - datenum(1970,1,1);
 		unixTime = unixTime * 86400;
 		
-		fprintf(fid,'\t"%i" : {',strokeID);
-		fprintf(fid,'\t\t"unixTime" : %.1f,\n',unixTime);
+		fprintf(fid,'\t"%.0f" : {',strokeID);
+		fprintf(fid,'"unixTime" : %.1f,\n',unixTime);
 		fprintf(fid,'\t\t"lat" : %.2f,\n',stroke(7));
-		fprintf(fid,'\t\t"long" : %.2f}',stroke(11));
+		fprintf(fid,'\t\t"long" : %.2f}',stroke(8));
 
 		if i == size(data,1);
 			fprintf(fid,'\n');
