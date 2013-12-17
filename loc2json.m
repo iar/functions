@@ -1,4 +1,4 @@
-function loc2json( data, exportName )
+function loc2json( data, id, exportName )
 %Exports DATA as an EXPORTNAME.JSON formatted file
 %
 %   Written By:  Michael Hutchins
@@ -11,7 +11,7 @@ function loc2json( data, exportName )
 
 		stroke = data(i,:);
 		
-		strokeID = 1e7*rand();
+		strokeID = id(i);
 		unixTime = datenum(stroke(1:6)) - datenum(1970,1,1);
 		unixTime = unixTime * 86400;
 		
