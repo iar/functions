@@ -10,7 +10,12 @@ function [cores] = parallel_start( pools )
         case 1
             cores = pools;
     end
-    
+   
+    % Check for license limitations
+    if cores > 8
+	cores = 8;
+    end
+ 
     currentPool = matlabpool('size');
     
     if currentPool == 0
