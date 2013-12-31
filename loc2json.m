@@ -31,6 +31,7 @@ function loc2json( data, id, exportName )
 
 	fprintf(fid,'}');
 	
+	fclose(fid);
 
 end
 
