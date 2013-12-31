@@ -507,7 +507,9 @@ else
 end
 
 % Determine if A is a row vector.
-rowvec = isrow(a);
+rows = size(a,1);
+cols = size(a,2);
+rowvec = (rows == 1) && (cols > 1);
 
 if ~byrow  % default case
     
@@ -578,7 +580,7 @@ if ~byrow  % default case
                     indC = cumsum(groupsSortA);                         % Lists position, starting at 1.
                     indC(indSortA) = indC;                              % Re-reference indC to indexing of sortA.
                 otherwise % 'stable'
-                    [~,indSortC] = sort(c);                             % Sort C to get index.
+                    [dummy,indSortC] = sort(c);                             % Sort C to get index.
                     
                     lengthGroupsSortA = diff(find([groupsSortA; true]));  % Determine how many of each of the above indices there are in IC.
                     
@@ -670,7 +672,7 @@ else    % 'rows' case
                 elseif numRows == 0
                     indC = zeros(0,1);
                 else
-                    [~,indSortC] = sortrows(c);                         % Sort C to get index.
+                    [dummy,indSortC] = sortrows(c);                         % Sort C to get index.
                     
                     lengthGroupsSortA = diff(find([groupsSortA; true]));    % Determine how many of each of the above indices there are in IC.
                     
