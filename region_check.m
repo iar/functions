@@ -1,5 +1,5 @@
 function [ regionID, regionName ] = region_check( lat, long )
-%REGION_CHECK retuens the regionID for the points lat, long.
+%REGION_CHECK(LAT, LONG) returns the regionID for the points lat, long.
 %   Regions defined as:
 %		# - Name -- Bounds (lat, long)
 %		1 - North America -- [[15 90],  [-130 -60]]
