@@ -39,7 +39,7 @@ function [ labels ] = sample_split( nElem, split )
 		sample = randsample(length(remaining), nSplit(i));
 
 		% Assign labels to the split number
-		labels(sample) = i;
+		labels(remaining(sample)) = i;
 
 		% Remove assigned indices
 		remaining(sample) = [];
