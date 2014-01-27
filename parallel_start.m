@@ -19,7 +19,7 @@ function [cores] = parallel_start( pools )
     currentPool = matlabpool('size');
     
     if currentPool == 0
-	matlabpool(cores)
+		matlabpool(cores);
     elseif currentPool ~= cores
         matlabpool close
         matlabpool(cores)
