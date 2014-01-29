@@ -1,5 +1,5 @@
 function [ cMap ] = colorbrewer( colorName, steps )
-%COLORBREWER generates a colormap based on select choices from
+%COLORBREWER(colorName, steps) generates a colormap based on select choices from
 %	http://colorbrewer2.org
 %	Choices include:
 %		BuPu, blue - Sequential blue/purple
