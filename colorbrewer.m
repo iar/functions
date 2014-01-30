@@ -5,7 +5,8 @@ function [ cMap ] = colorbrewer( colorName, steps )
 %		BuPu, blue - Sequential blue/purple
 %		YlOrRd, red - Sequential yellow/orange/red
 %		YlGnBu, teal - Sequential yellow/green/blue
-%		RdYlBu, redblue - Diverging Red - Yellow - Blue [Default]
+%		RdYlBu, redblue - Diverging Red - Yellow - Blue
+%		BlYlRd, bluered - Diverging Blue - Yellow - Red [Default]
 %	All colors are colorblind safe
 %		
 %   Written by: Michael Hutchins
@@ -14,7 +15,7 @@ function [ cMap ] = colorbrewer( colorName, steps )
 	
 	switch nargin
 		case 0
-			colorName = 'RdYlBu';
+			colorName = 'bluered';
 			steps = 20;
 		case 1
 			steps = 20;
@@ -64,7 +65,19 @@ function [ cMap ] = colorbrewer( colorName, steps )
 				171, 217, 233;...
 				116, 173, 209;...
 				69, 117, 180];
-				
+			
+	elseif strcmp(colorName,'BuYlRd') ||...
+			strcmp(colorName,'bluered')
+
+		rough =	[  69   117   180;...
+				   116   173   209;...
+				   171   217   233;...
+				   224   243   248;...
+				   255   255   191;...
+				   254   224   144;...
+				   253   174    97;...
+				   244   109    67;...
+				   215    48    39];
 	else
 		warning('Color not found.  Using default color');		
 	end
