@@ -7,6 +7,7 @@ function [ cMap ] = colorbrewer( colorName, steps )
 %		YlGnBu, teal - Sequential yellow/green/blue
 %		RdYlBu, redblue - Diverging Red - Yellow - Blue
 %		BlYlRd, bluered - Diverging Blue - Yellow - Red [Default]
+%		9ClassSet1, qual - Qualitative colors (max of 9)
 %	All colors are colorblind safe
 %		
 %   Written by: Michael Hutchins
@@ -22,7 +23,7 @@ function [ cMap ] = colorbrewer( colorName, steps )
 	end
 	
 	%% Select Color
-	
+		
 	if strcmp(colorName,'BuPu') ||...
 			strcmp(colorName,'blue')
 		
@@ -78,6 +79,27 @@ function [ cMap ] = colorbrewer( colorName, steps )
 				   253   174    97;...
 				   244   109    67;...
 				   215    48    39];
+	elseif strcmp(colorName,'9ClassSet1') ||...
+			strcmp(colorName,'qual')
+			
+		rough =	[228,26,28;...
+				55,126,184;...
+				77,175,74;...
+				152,78,163;...
+				255,127,0;...
+				166,86,40;...
+				247,129,191;...
+				153,153,153;...
+				255,255,51];
+			
+		if steps > 9
+			error('qual can only have 9 colors or less');
+		end
+		
+		% Return early if qualitative is selected
+		cMap = rough(1:steps,:);
+		return
+			   
 	else
 		warning('Color not found.  Using default color');		
 	end
