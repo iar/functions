@@ -97,7 +97,7 @@ function [ cMap ] = colorbrewer( colorName, steps )
 		end
 		
 		% Return early if qualitative is selected
-		cMap = rough(1:steps,:);
+		cMap = rough(1:steps,:)./255;
 		return
 			   
 	else
