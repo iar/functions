@@ -37,12 +37,12 @@ function [ parameters ] = storm_parameters( wwlln, stormID, flashID, minCount, f
 		lat = wwlln(:,7);
 		long = wwlln(:,8);
 
-		loc = lat > 0 & (long < -50 | long > 160);
+		%loc = lat > 0 & (long < -50 | long > 160);
 
-		weatherCut = reanalysis_match( lat(loc), long(loc), wwlln(loc,1:6));
+		%weatherCut = reanalysis_match( lat(loc), long(loc), wwlln(loc,1:6));
 
 		weather = zeros(size(wwlln,1),2);
-		weather(loc,:) = weatherCut;
+		%weather(loc,:) = weatherCut;
 
 		[land] = land_check(lat, long);
 		[regionID, ~] = region_check(lat, long);
