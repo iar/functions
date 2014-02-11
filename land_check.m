@@ -48,7 +48,7 @@ function [ landStatus, zStatus ] = land_check( lat, long )
 	
 	% Input check:
 	if any(abs(lat) > 90)
-		waring('Input latitudes must be between -90 and 90 degrees, inclusive.  Latitude will be bound.')
+		warning('Input latitudes must be between -90 and 90 degrees, inclusive.  Latitude will be bound.')
 		lat(lat >  90) =  90;
 		lat(lat < -90) = -90;
 	end
