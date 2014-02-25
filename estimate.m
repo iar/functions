@@ -1,6 +1,8 @@
 function [ hours ] = estimate( days, time, total )
-%ESTIMATE Returns hours left in processing run that has processed
-%	DAYS in TIME seconds with TOTAL days in the run
+%ESTIMATE(completed, time, total) Returns hours left in processing run that
+%	COMPLETED segments in TIME seconds with TOTAL sigments in the run
+%
+%	Written by: Michael Hutchin
 
 	rate = time / days;
 	hours = (total - days) * rate;

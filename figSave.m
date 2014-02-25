@@ -10,7 +10,9 @@ function figSave(figurePath, figureName, hash)
 		name = sprintf('%s%s_%s.eps',figurePath, figureName, hash);
 		print(gcf,name,'-depsc','-painters');		
 	end
+	set(gcf,'InvertHardCopy','off')
 	name = sprintf('%s%s_%s.png',figurePath, figureName, hash);
 	saveas(gcf,name);
+	set(gcf,'InvertHardCopy','on')
 
 end

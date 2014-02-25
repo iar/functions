@@ -1,5 +1,5 @@
 function [ regionID, regionName ] = region_check( lat, long )
-%REGION_CHECK retuens the regionID for the points lat, long.
+%REGION_CHECK(LAT, LONG) returns the regionID for the points lat, long.
 %   Regions defined as:
 %		# - Name -- Bounds (lat, long)
 %		1 - North America -- [[15 90],  [-130 -60]]
@@ -53,7 +53,9 @@ function [ regionID, regionName ] = region_check( lat, long )
 	
 	% Input check:
 	if any(abs(lat) > 90)
-		error('Input latitudes must be between -90 and 90 degrees, inclusive.')
+		warning('Input latitudes must be between -90 and 90 degrees, inclusive. Latitudes will be bound.')
+		lat(lat > 90) = 89.9;
+		lat(lat < 90) = -89.9;
 	end
 	
 	if any(abs(long) > 180)
