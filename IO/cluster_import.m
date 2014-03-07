@@ -79,8 +79,13 @@ function [ cluster ] = cluster_import( date )
 	if import
    
 		% Load tree data
-
-		data = ae_import(date);
+		try
+			data = ae_import(date);
+		catch
+			data = a_import(date);
+			fprintf('%04g/%02g/%02g - Using A-File Data\n',date);
+		end
+		
 		cluster = cluster_wwlln(data);
 		
 		% Save traversed tree data
