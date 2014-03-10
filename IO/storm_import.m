@@ -1,4 +1,4 @@
-function [ classification, evolution, evolutionNorm ] = storm_import( date, hash )
+function [ classification, evolution, evolutionNorm ] = storm_import( date )
 %STORM_IMPORT Loads processed storm data from storm_process.m with HASH
 %
 %   Written By:  Michael Hutchins
@@ -7,7 +7,7 @@ function [ classification, evolution, evolutionNorm ] = storm_import( date, hash
 
 	subdirectory = 'stormFiles/';
 	prefix = 'storm';
-	suffix = hash;
+	suffix = '';
 
 %% Initialize variables
 

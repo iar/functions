@@ -1,4 +1,4 @@
-function [ classification, evolution, evolutionNorm ] = storm_entln_import( date, hash )
+function [ classification, evolution, evolutionNorm ] = storm_entln_import( date )
 %STORM_IMPORT Loads processed ENTLN storm data from storm_process.m with HASH
 %
 %   Written By:  Michael Hutchins
@@ -7,7 +7,7 @@ function [ classification, evolution, evolutionNorm ] = storm_entln_import( date
 
 	subdirectory = 'stormFiles/';
 	prefix = 'storm_entln';
-	suffix = hash;
+	suffix = '';
 
 %% Initialize variables
 
