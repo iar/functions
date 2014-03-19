@@ -59,22 +59,35 @@ function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotti
 	%% Define x and y basis
 	
 	[xBase, xRange] = levelDef(x, logPlotting(1), varSteps(1));
+	
+	if length(unique(x(:))) == 10
+		xBase = [1 : 9];
+	end
+	
 	[yBase, yRange] = levelDef(y, logPlotting(2), varSteps(2));
 	
 	xStep = xBase(end) - xBase(end-1);
-	
+
 	%% Format data
 
 	levelDensity = zeros(length(xBase),length(yBase),nLevels);
-	levelMean	 = zeros(length(xBase),nLevels);
+	levelMean	 = zeros(length(xBase),nLevels);	
 	
 	for i = 1 : nLevels;
 		
-		level1 = levels(i);
-		level2 = levels(i + 1);
-		
-		loc = z >= level1 &...
-			  z <  level2;
+		if i < nLevels
+					
+			loc = z >= levels(i) &...
+				  z <  levels(i + 1);
+			  
+			levelUsed = [levels(i), levels(i + 1)];
+
+		else
+			
+			loc = z >= levels(i);			
+			levelUsed = [levels(i), Inf];
+			
+		end
 		  
 		xLevel = x(loc);
 		yLevel = y(loc);
@@ -82,11 +95,10 @@ function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotti
 		for j = 1 : length(xBase) 
 			
 			if j == length(xBase)
-				xLoc = xLevel >= xBase(j) &...
-				   xLevel < xBase(j) + xStep;
+				xLoc = xLevel >= xBase(j);
 			else
 				xLoc = xLevel >= xBase(j) &...
-				   xLevel < xBase(j + 1);
+					   xLevel < xBase(j + 1);
 			end
 
 			
@@ -107,7 +119,7 @@ function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotti
 		
 		legendText = sprintf('%s: %.2g -- %.2g',...
 							names{3},...
-							level1, level2);
+							levelUsed);
 		levelText{i} = legendText;
 		
 	end
@@ -119,7 +131,7 @@ function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotti
 	nPlot =	2 * ceil(nLevels/3);
 	mPlot = 3;
 	pPlot = 1;
-	
+
 	
 	%% Top plots: averaged data
 
@@ -218,6 +230,8 @@ function [levels, levelRange] = levelDef(data, logLevel, nLevels)
 	levelRange = [min(levelValues), max(levelValues)];
 	
 	levels = linspace(levelRange(1), levelRange(2), nLevels + 1);
+	
+	levels = levels(1 : end - 1);
 	
 	if logLevel
 		levels = 10.^levels;
