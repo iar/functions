@@ -1,3 +1,5 @@
 These are a set of MATLAB functions written during my research.
 
+The functions in IO are used for easy reading/writing of WWLLN related files, with locations specified by IO/dataPath.dat.
+
 A few are from the MathWorks File Exchange, if so they won't have a "Created by: Michael Hutchins" line at the top of the file.
