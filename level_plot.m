@@ -53,7 +53,7 @@ function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotti
 			
 	[levels, levelRange] = levelDef(z, logPlotting(3), nLevels);
 	
-	levelColors = jet(nLevels);
+	levelColors = colorbrewer('qual',nLevels);
 	levelText = cell(nLevels,1);
 	
 	%% Define x and y basis
@@ -156,6 +156,7 @@ function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotti
 	legend(levelText);
 	xlabel(names{1})
 	ylabel(names{2})
+	set(gca,'TickDir','out');
 	
 	%% Bottom plots: denisty plots of total data
 
@@ -194,6 +195,10 @@ function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotti
 			set(gca,'YTick',[]);
 		end
 
+		colormap(colorbrewer('teal',10));
+		colorLimits = get(gca,'clim');
+		caxis([floor(colorLimits(1)) ceil(colorLimits(2))]);
+		set(gca,'TickDir','out')
 		title(levelText{i})		
 		xlabel(names{1})
 		ylabel(names{2})
