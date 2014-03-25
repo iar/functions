@@ -1,4 +1,4 @@
-function lookup_write( lookup, filename, station_name, station_loc )
+function lookup_write( lookup, filename, station_name, station_loc, startIndex )
 %
 %   Written By:  Michael Hutchins
 
