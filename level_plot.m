@@ -1,4 +1,4 @@
-function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotting, nLevels, varSteps )
+function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotting, nLevels, varSteps, cutoff )
 %% LEVEL_PLOT plots the time series of data[:,1] vs data[:,2] split
 %	over the level variable data[:,3].
 %	nLevels are found, with the default of 4 levels
@@ -25,15 +25,21 @@ function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotti
 			logPlotting = false(M + 1,1);
 			nLevels = 4;
 			varSteps = [P, 10];
+			cutoff = 0;
 		case 2
 			logPlotting = false(M + 1,1);
 			nLevels = 4;
 			varSteps = [P, 10];
+			cutoff = 0;
 		case 3
 			nLevels = 4;
 			varSteps = [P, 10];
+			cutoff = 0;
 		case 4
 			varSteps = [P, 10];
+			cutoff = 0;
+		case 5
+			cutoff = 0;
 	end
 	
 	logPlotting = logical(logPlotting);
@@ -101,6 +107,9 @@ function [ levelMean, levelDensity, xBase ] = level_plot( data, names, logPlotti
 					   xLevel < xBase(j + 1);
 			end
 
+			if sum(xLoc) < cutoff
+				continue
+			end
 			
 			yHist = hist(yLevel(xLoc),yBase);
 			
