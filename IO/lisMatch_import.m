@@ -6,7 +6,7 @@ function [flashMatch, missedStrokes, matchStrokes, groupMatch, groupMatched, gro
 
 %% Filepaths
 
-	subdirectory = 'lisMatch';
+	subdirectory = 'LIS';
 	prefix = 'lisMatchENTLN';
 	suffix = sprintf('_%s.mat',hash);
 
@@ -39,6 +39,7 @@ function [flashMatch, missedStrokes, matchStrokes, groupMatch, groupMatched, gro
 		fid = fopen('dataPath.dat');
 		dataPath = textscan(fid,'%s','Delimiter','\n');
 		dataPath = dataPath{1};
+		fclose(fid);
 		
 		% Check each path for the file
 		for i = 1 : size(dataPath,1);

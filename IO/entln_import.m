@@ -68,6 +68,10 @@ function [data] = entln_import(date)
 	elseif strmatch(class(date),'char')
 		filename = date;
 		
+		if strmatch(filename(end-3:end),'.csv')
+			import = true;
+		end
+		
 	% Error out if not found
 	else
 		error('Unrecognized filename.')
@@ -76,62 +80,51 @@ function [data] = entln_import(date)
 %% Read/Load data
 	
 	if import
-		
+		%%
 		fid = fopen(filename);
 		s=fgets(fid);
 		fend=feof(fid);
 		index=1;
-		data=zeros(20000000,13);
+		data=zeros(20000000,14);
 
 		while(fend==0),
 			s=fgets(fid);
-			A = sscanf(s(85:end),'%g/%g/%g %g:%g:%f %2c,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
-			if isempty(A) || length(A)~=11
-				a=strfind(s,',');
-				A = sscanf(s(a(3)+1:end),'%g/%g/%g %g:%g:%f %2c,%g-%g-%gT%g:%g:%f,%g,%g,%g,%g,%g');
-			end
-
-			B = textscan(s,'%s%s','Delimiter',',,');
-			B1 = B{1};
-			B2 = B{2};
-			B1 = B1{end-1};
-			B2 = B2{end-1};
-			if length(B1) < length(B2) && length(B1)>=1
-				B = B1;
-				Balt = B2;
+			
+			A = textscan(s,'%s','Delimiter',',');
+			A = A{1};
+			
+			readDate = sscanf(A{5},'%g-%g-%gT%g:%g:%g');
+			readLat = sscanf(A{6},'%g');
+			readLong = sscanf(A{7},'%g');
+			readHeight =  sscanf(A{8},'%g');
+			readType =  sscanf(A{9},'%g');
+			readAmp =  sscanf(A{10},'%g');
+			readNstn =  length(A) - 15;
+			readConf =  sscanf(A{end-2},'%g');
+			
+			if ~isempty(A{11})
+				B = textscan(A{11},'%s','Delimiter',';');
+				B = B{1};
+				readError = sscanf(B{end},'LocationError=%g');
 			else
-				B = B2;
-				Balt = B1;
-			end
-			B = sscanf(B,'%g');
-			if isempty(B)
-				B = sscanf(Balt,'%g');
+				readError = 0;
 			end
 
+			data(index,:)=[readDate(:)', readLat, readLong, readHeight,...
+						   readType, readAmp, readConf, readNstn, readError];
 
-			D=strfind(s,',,');
-			E=strfind(s,'=');
-
-			if length(D)>1
-				nstn=length(E);
-			else
-				nstn=length(E)-2;
+			if data(index,2) == 12;
+				break
 			end
-
-			try 
-				data(index,:)=[A(9:19)',B,nstn];
-			catch
-				data(index,:)=[A(3:13)',B,nstn];
-			end
-
+			
 			index=index+1;
 			fend=feof(fid);
 		end
 
-		data=data(1:index-1,:);
+		data=data(1:index - 1,:);
 
 		fclose(fid);
-
+%%
 		
 	else
 		

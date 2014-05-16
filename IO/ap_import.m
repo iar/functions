@@ -64,6 +64,7 @@ function [data,power] = ap_import(date)
 	% Check for filename specified file
 	elseif strmatch(class(date),'char')
 		filename = date;
+		import = true;
 		
 	% Error out if not found
 	else
